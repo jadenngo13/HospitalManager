@@ -7,20 +7,18 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="loginapp.LoginController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="loginapp.LoginController">
    <children>
       <AnchorPane layoutX="-97.0" layoutY="-124.0" prefHeight="400.0" prefWidth="400.0">
          <children>
-            <TextField layoutX="189.0" layoutY="187.0" prefHeight="27.0" prefWidth="197.0" />
-            <PasswordField layoutX="189.0" layoutY="226.0" prefHeight="27.0" prefWidth="197.0" />
+         	<Label fx:id="dbStatus" layoutX="183.0" layoutY="135.0" />
+            <TextField fx:id="username" layoutX="189.0" layoutY="187.0" prefHeight="27.0" prefWidth="197.0" />
+            <PasswordField fx:id="password" layoutX="189.0" layoutY="226.0" prefHeight="27.0" prefWidth="197.0" />
             <ComboBox fx:id="combo" layoutX="189.0" layoutY="264.0" prefWidth="150.0" promptText="Admin/Patient" />
-            <Button layoutX="189.0" layoutY="300.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="197.0" text="Login" />
+            <Button fx:id="loginButton" layoutX="189.0" layoutY="300.0" mnemonicParsing="false" onAction="#Login" prefHeight="27.0" prefWidth="197.0" text="Login" />
             <Label layoutX="107.0" layoutY="135.0" text="DB Status" />
-            <Label fx:id="user" layoutX="114.0" layoutY="192.0" text="Username" />
-            <Label fx:id="pass" layoutX="115.0" layoutY="231.0" text="Password" />
-            <Label layoutX="183.0" layoutY="135.0" />
-            <Label fx:id="dbstatus" layoutX="183.0" layoutY="135.0" />
+            <Label layoutX="114.0" layoutY="192.0" text="Username" />
+            <Label layoutX="115.0" layoutY="231.0" text="Password" />
          </children>
       </AnchorPane>
    </children>
