@@ -59,7 +59,7 @@ public class LoginController implements Initializable {
 						break;
 				}
 			} else {
-				this.loginStatus.setText("Wrong username/password");
+				this.loginStatus.setText("Wrong user/pass");
 			}
 		} catch (Exception localException) {
 			
