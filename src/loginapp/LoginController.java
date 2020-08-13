@@ -22,6 +22,7 @@ import patients.PatientsController;
 public class LoginController implements Initializable {
 	
 	LoginModel loginModel = new LoginModel();
+
 	@FXML 
 	private Label dbStatus;
 	@FXML 
@@ -34,6 +35,7 @@ public class LoginController implements Initializable {
 	private Button loginButton;
 	@FXML 
 	private Label loginStatus;
+	
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		if (this.loginModel.isDBConnected()) {
@@ -59,7 +61,7 @@ public class LoginController implements Initializable {
 						break;
 				}
 			} else {
-				this.loginStatus.setText("Wrong user/pass");
+				this.loginStatus.setText("Wrong\nuser/pass");
 			}
 		} catch (Exception localException) {
 			
