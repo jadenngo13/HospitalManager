@@ -1,5 +1,6 @@
 package admin;
 
+import java.io.IOException;
 import java.net.URL;
 
 import java.sql.Connection;
@@ -13,12 +14,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 
 import java.util.ArrayList;
@@ -94,6 +99,7 @@ public class AdminController implements Initializable {
 	private String sqlDel = "DELETE FROM patients WHERE id=?";
 	
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
+	public static PatientData selectedPatient;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
@@ -184,9 +190,10 @@ public class AdminController implements Initializable {
 	
 	@FXML
 	private void deletePatient(ActionEvent event) throws SQLException {
-		PatientData selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
+		selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
 		patientsToDel.add(selectedPatient);
 	    patientTable1.getItems().remove(selectedPatient);
+	    selectedPatient = null;
 	}
 	
 	@FXML
@@ -200,6 +207,26 @@ public class AdminController implements Initializable {
 			    stmt.executeUpdate();
 			} catch (SQLException e) {
 				System.err.println("Error: " + e);
+			}
+		}
+	}
+	
+	@FXML
+	private void editPatient(ActionEvent event) throws SQLException {
+		selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
+		if (selectedPatient != null) {
+			try {
+				Stage editStage = new Stage();
+				FXMLLoader editLoader = new FXMLLoader();
+				Pane editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editFXML.fxml").openStream());
+				
+				Scene editScene = new Scene(editRoot);
+				editStage.setScene(editScene);
+				editStage.setTitle("Edit Menu");
+				editStage.setResizable(false);
+				editStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
