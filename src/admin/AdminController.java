@@ -180,8 +180,7 @@ public class AdminController implements Initializable {
 		this.appDate.setValue(null);
 	}
 	
-	/***** Admin  Tab 
-	 * @throws SQLException *****/
+	/***** Admin  Tab *****/
 	
 	@FXML
 	private void deletePatient(ActionEvent event) throws SQLException {

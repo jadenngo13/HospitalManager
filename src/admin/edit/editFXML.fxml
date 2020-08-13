@@ -1,20 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="-44.0" layoutY="-159.0" prefHeight="500.0" prefWidth="500.0">
+      <AnchorPane layoutX="-50.0" layoutY="-159.0" prefHeight="600.0" prefWidth="532.0">
          <children>
-            <HBox layoutX="168.0" layoutY="160.0" prefHeight="341.0" prefWidth="332.0" />
-            <VBox layoutX="44.0" layoutY="160.0" prefHeight="341.0" prefWidth="125.0">
+            <VBox layoutX="50.0" layoutY="195.0" prefHeight="402.0" prefWidth="141.0">
                <children>
-                  <Label prefHeight="17.0" prefWidth="70.0" text="Label" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="ID">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin></Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="First Name">
+                     <VBox.margin>
+                        <Insets left="30.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="Last Name">
+                     <VBox.margin>
+                        <Insets left="30.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="Gender">
+                     <VBox.margin>
+                        <Insets left="30.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="Email">
+                     <VBox.margin>
+                        <Insets left="30.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="Birthday">
+                     <VBox.margin>
+                        <Insets left="30.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Appointment Date">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
             </VBox>
+            <VBox layoutX="183.0" layoutY="195.0" prefHeight="402.0" prefWidth="349.0">
+               <children>
+                  <TextField promptText="ID">
+                     <VBox.margin>
+                        <Insets right="300.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField promptText="First Name">
+                     <VBox.margin>
+                        <Insets right="200.0" top="10.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField promptText="First Name">
+                     <VBox.margin>
+                        <Insets right="200.0" top="10.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField prefHeight="27.0" prefWidth="58.0" promptText="Gender">
+                     <VBox.margin>
+                        <Insets right="275.0" top="10.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField promptText="Email">
+                     <VBox.margin>
+                        <Insets right="150.0" top="10.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField promptText="Birthday">
+                     <VBox.margin>
+                        <Insets right="250.0" top="10.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField promptText="App. Date">
+                     <VBox.margin>
+                        <Insets right="250.0" top="10.0" />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+            </VBox>
+            <Label layoutX="68.0" layoutY="168.0" text="Edit Patient Profile Information">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
          </children></AnchorPane>
    </children>
 </AnchorPane>
