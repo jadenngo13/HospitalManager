@@ -1,6 +1,7 @@
 package admin;
 
 import java.net.URL;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.TableColumn;
 
+import java.util.ArrayList;
+
 public class AdminController implements Initializable {
 	
 	// Patient Tab
@@ -30,9 +33,13 @@ public class AdminController implements Initializable {
 	@FXML
 	private TextField lastName;
 	@FXML
-	private TextField phone;
+	private TextField gender;
+	@FXML
+	private TextField email;
 	@FXML
 	private DatePicker birthday;
+	@FXML
+	private DatePicker appDate;
 	@FXML
 	private TableView<PatientData> patientTable;
 	@FXML
@@ -42,9 +49,13 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> lnColumn;
 	@FXML
-	private TableColumn<PatientData, String> phoneColumn;
+	private TableColumn<PatientData, String> genderColumn;
+	@FXML
+	private TableColumn<PatientData, String> emailColumn;
 	@FXML
 	private TableColumn<PatientData, String> birthdayColumn;
+	@FXML
+	private TableColumn<PatientData, String> appDateColumn;
 	
 	// Admin Tab
 	@FXML 
@@ -66,20 +77,29 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> lnColumn1;
 	@FXML
-	private TableColumn<PatientData, String> phoneColumn1;
+	private TableColumn<PatientData, String> genderColumn1;
+	@FXML
+	private TableColumn<PatientData, String> emailColumn1;
 	@FXML
 	private TableColumn<PatientData, String> birthdayColumn1;
+	@FXML
+	private TableColumn<PatientData, String> appDateColumn1;
 	
 	
 	private dbConnection dc;
 	private ObservableList<PatientData> data;
 	
 	private String sqlLoad = "SELECT * FROM patients";
-	String sqlInsert = "INSERT INTO patients(id, first_name, last_name, phone, birthday) VALUES (?, ?, ?, ?, ?)";
+	private String sqlInsert = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	private String sqlDel = "DELETE FROM patients WHERE id=?";
+	
+	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
 	}
+	
+	/***** Patient Tab *****/
 	
 	@FXML
 	private void loadPatientData(ActionEvent event) throws SQLException {
@@ -99,7 +119,7 @@ public class AdminController implements Initializable {
 			ResultSet rs = conn.createStatement().executeQuery(sqlLoad);
 			
 			while (rs.next()) {
-				this.data.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5)));
+				this.data.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
 			}
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
@@ -109,16 +129,20 @@ public class AdminController implements Initializable {
 			this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
 			this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 			this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
-			this.phoneColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("phone"));
+			this.genderColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));
+			this.emailColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("email"));
 			this.birthdayColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("birthday"));
+			this.appDateColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("appDate"));
 			this.patientTable.setItems(null);
 			this.patientTable.setItems(data);
 		} else {
 			this.idColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
 			this.fnColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 			this.lnColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
-			this.phoneColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("phone"));
+			this.genderColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));
+			this.emailColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("email"));
 			this.birthdayColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("birthday"));
+			this.appDateColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("appDate"));
 			this.patientTable1.setItems(null);
 			this.patientTable1.setItems(data);
 		}
@@ -133,8 +157,10 @@ public class AdminController implements Initializable {
 			stmt.setString(1, this.id.getText());
 			stmt.setString(2, this.firstName.getText());
 			stmt.setString(3, this.lastName.getText());
-			stmt.setString(4, this.phone.getText());
-			stmt.setString(5, this.birthday.getEditor().getText());
+			stmt.setString(4, this.gender.getText());
+			stmt.setString(5, this.email.getText());
+			stmt.setString(6, this.birthday.getEditor().getText());
+			stmt.setString(7, this.appDate.getEditor().getText());
 			
 			stmt.execute();
 			conn.close();
@@ -148,8 +174,35 @@ public class AdminController implements Initializable {
 		this.id.setText("");
 		this.firstName.setText("");
 		this.lastName.setText("");
-		this.phone.setText("");
+		this.gender.setText("");
+		this.email.setText("");
 		this.birthday.setValue(null);
+		this.appDate.setValue(null);
+	}
+	
+	/***** Admin  Tab 
+	 * @throws SQLException *****/
+	
+	@FXML
+	private void deletePatient(ActionEvent event) throws SQLException {
+		PatientData selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
+		patientsToDel.add(selectedPatient);
+	    patientTable1.getItems().remove(selectedPatient);
+	}
+	
+	@FXML
+	private void saveData(ActionEvent event) throws SQLException {
+		for (PatientData patient : patientsToDel) {
+			try {
+				Connection conn = dbConnection.getConnection();
+				
+				PreparedStatement stmt = conn.prepareStatement(sqlDel);
+			    stmt.setString(1, patient.getID());
+			    stmt.executeUpdate();
+			} catch (SQLException e) {
+				System.err.println("Error: " + e);
+			}
+		}
 	}
 }
 
