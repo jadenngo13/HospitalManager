@@ -63,7 +63,7 @@
                                           <Insets left="20.0" right="20.0" />
                                        </VBox.margin>
                                     </TextField>
-                                    <DatePicker prefHeight="30.0" prefWidth="371.0">
+                                    <DatePicker fx:id="birthday" prefHeight="30.0" prefWidth="371.0">
                                        <VBox.margin>
                                           <Insets left="20.0" />
                                        </VBox.margin>

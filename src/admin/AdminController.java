@@ -69,10 +69,13 @@ public class AdminController implements Initializable {
 		}
 		
 		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
-		this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("FIRSTNAME"));
-		this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("LASTNAME"));
-		this.phoneColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("PHONE"));
-		this.birthdayColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("BIRTHDAY"));
+		this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
+		this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
+		this.phoneColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("phone"));
+		this.birthdayColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("birthday"));
+		
+		this.patientTable.setItems(null);
+		this.patientTable.setItems(data);
 	}
 	 
 	@FXML
@@ -90,7 +93,7 @@ public class AdminController implements Initializable {
 			stmt.execute();
 			conn.close();
 		} catch (SQLException e) {
-			System.err.println("Error: " + e);
+			e.printStackTrace();
 		}
 	}
 	

@@ -6,57 +6,57 @@ import javafx.beans.property.SimpleStringProperty;
 public class PatientData {
 	
 	private StringProperty ID;
-	private StringProperty FIRSTNAME;
-	private StringProperty LASTNAME;
-	private StringProperty PHONE;
-	private StringProperty BIRTHDAY;
+	private StringProperty firstName;
+	private StringProperty lastName;
+	private StringProperty phone;
+	private StringProperty birthday;
 	
 	public PatientData(String id, String firstName, String lastName, String phone, String bday) {
 		this.ID = new SimpleStringProperty(id);
-		this.FIRSTNAME = new SimpleStringProperty(firstName);
-		this.LASTNAME = new SimpleStringProperty(lastName);
-		this.PHONE = new SimpleStringProperty(phone);
-		this.BIRTHDAY = new SimpleStringProperty(bday);
+		this.firstName = new SimpleStringProperty(firstName);
+		this.lastName = new SimpleStringProperty(lastName);
+		this.phone = new SimpleStringProperty(phone);
+		this.birthday = new SimpleStringProperty(bday);
 	}
 	
-	public StringProperty getID() {
-		return ID;
+	public String getID() {
+		return ID.get();
 	}
 
-	public StringProperty getFirstName() {
-		return FIRSTNAME;
+	public String getFirstName() {
+		return firstName.get();
 	}
 
-	public StringProperty getLastName() {
-		return LASTNAME;
+	public String getLastName() {
+		return lastName.get();
 	}
 
-	public StringProperty getPhone() {
-		return PHONE;
+	public String getPhone() {
+		return phone.get();
 	}
 
-	public StringProperty getBirthday() {
-		return BIRTHDAY;
+	public String getBirthday() {
+		return birthday.get();
 	}
 
-	public void setID(StringProperty id) {
-		ID = id;
+	public void setID(String id) {
+		this.ID.set(id);
 	}
 
-	public void setFirstName(StringProperty firstName) {
-		FIRSTNAME = firstName;
+	public void setFirstName(String firstName) {
+		this.firstName.set(firstName);
 	}
 
-	public void setLastName(StringProperty lastName) {
-		LASTNAME = lastName;
+	public void setLastName(String lastName) {
+		this.lastName.set(lastName);
 	}
 
-	public void setPhone(StringProperty phone) {
-		PHONE = phone;
+	public void setPhone(String phone) {
+		this.phone.set(phone);
 	}
 
-	public void setBirthday(StringProperty birthday) {
-		BIRTHDAY = birthday;
+	public void setBirthday(String birthday) {
+		this.birthday.set(birthday);
 	}
 	
 	public StringProperty idProperty() {
@@ -64,6 +64,18 @@ public class PatientData {
 	}
 	
 	public StringProperty firstNameProperty() {
-		return this.ID;
+		return this.firstName;
+	}
+	
+	public StringProperty lastNameProperty() {
+		return this.lastName;
+	}
+	
+	public StringProperty phoneProperty() {
+		return this.phone;
+	}
+	
+	public StringProperty birthdayProperty() {
+		return this.birthday;
 	}
 }
