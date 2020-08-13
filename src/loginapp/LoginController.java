@@ -61,7 +61,7 @@ public class LoginController implements Initializable {
 						break;
 				}
 			} else {
-				this.loginStatus.setText("Wrong\nuser/pass");
+				this.loginStatus.setText("Incorrect");
 			}
 		} catch (Exception localException) {
 			
