@@ -13,15 +13,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doctor.DoctorController">
+<AnchorPane prefHeight="758.0" prefWidth="1393.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="doctor.DoctorController">
    <children>
-      <AnchorPane layoutX="-75.0" layoutY="-66.0" prefHeight="824.0" prefWidth="1362.0">
+      <AnchorPane layoutX="-81.0" layoutY="-74.0" prefHeight="832.0" prefWidth="1471.0">
          <children>
-            <TabPane layoutX="80.0" layoutY="74.0" prefHeight="750.0" prefWidth="1431.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane layoutX="80.0" layoutY="74.0" prefHeight="750.0" prefWidth="1433.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab text="Doctor Menu">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="717.0" prefWidth="1282.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="717.0" prefWidth="1425.0">
                            <children>
                               <VBox layoutX="1.0" layoutY="1.0" prefHeight="662.0" prefWidth="255.0">
                                  <children>
