@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="459.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.view.ViewController">
+   <children>
+      <AnchorPane layoutX="-78.0" layoutY="-178.0" prefHeight="500.0" prefWidth="500.0">
+         <children>
+            <VBox layoutX="79.0" layoutY="178.0" prefHeight="567.0" prefWidth="488.0">
+               <children>
+                  <Label text="ID">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField prefHeight="27.0" prefWidth="34.0" promptText="ID">
+                     <VBox.margin>
+                        <Insets left="20.0" right="415.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Name">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField prefHeight="27.0" prefWidth="150.0" promptText="Name">
+                     <VBox.margin>
+                        <Insets left="20.0" right="215.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Gender">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField prefHeight="27.0" prefWidth="150.0" promptText="Gender">
+                     <VBox.margin>
+                        <Insets left="20.0" right="365.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Email">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField prefHeight="27.0" prefWidth="150.0" promptText="Email">
+                     <VBox.margin>
+                        <Insets left="20.0" right="190.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Birthday">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <DatePicker prefHeight="27.0" prefWidth="161.0" promptText="Birthday">
+                     <VBox.margin>
+                        <Insets left="20.0" top="5.0" />
+                     </VBox.margin>
+                  </DatePicker>
+                  <Label text="Appointment Date">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <DatePicker prefHeight="27.0" prefWidth="161.0" promptText="Birthday">
+                     <VBox.margin>
+                        <Insets left="20.0" top="5.0" />
+                     </VBox.margin>
+                  </DatePicker>
+                  <Label text="Information">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextArea prefHeight="164.0" prefWidth="343.0" promptText="Existing conditions, subscriptions, etc.">
+                     <VBox.margin>
+                        <Insets left="20.0" right="100.0" top="5.0" />
+                     </VBox.margin>
+                  </TextArea>
+               </children>
+            </VBox>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>

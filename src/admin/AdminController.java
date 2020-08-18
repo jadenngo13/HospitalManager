@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import dbUtil.dbConnection;
@@ -20,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -46,6 +50,8 @@ public class AdminController implements Initializable {
 	@FXML
 	private DatePicker appDate;
 	@FXML
+	private TextArea info;
+	@FXML
 	private TableView<PatientData> patientTable;
 	@FXML
 	private TableColumn<PatientData, String> idColumn;
@@ -61,6 +67,9 @@ public class AdminController implements Initializable {
 	private TableColumn<PatientData, String> birthdayColumn;
 	@FXML
 	private TableColumn<PatientData, String> appDateColumn;
+	@FXML
+	private TableColumn<PatientData, String> infoColumn;
+	
 	
 	// Admin Tab
 	@FXML 
@@ -89,13 +98,15 @@ public class AdminController implements Initializable {
 	private TableColumn<PatientData, String> birthdayColumn1;
 	@FXML
 	private TableColumn<PatientData, String> appDateColumn1;
+	@FXML
+	private TableColumn<PatientData, String> infoColumn1;
 	
 	
 	private dbConnection dc;
 	private ObservableList<PatientData> data;
 	
 	private String sqlLoad = "SELECT * FROM patients";
-	private String sqlInsert = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	private String sqlInsert = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private String sqlDel = "DELETE FROM patients WHERE id=?";
 	
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
@@ -125,7 +136,7 @@ public class AdminController implements Initializable {
 			ResultSet rs = conn.createStatement().executeQuery(sqlLoad);
 			
 			while (rs.next()) {
-				this.data.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7)));
+				this.data.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 			}
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
@@ -139,6 +150,7 @@ public class AdminController implements Initializable {
 			this.emailColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("email"));
 			this.birthdayColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("birthday"));
 			this.appDateColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("appDate"));
+			this.infoColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("info"));
 			this.patientTable.setItems(null);
 			this.patientTable.setItems(data);
 		} else {
@@ -149,6 +161,7 @@ public class AdminController implements Initializable {
 			this.emailColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("email"));
 			this.birthdayColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("birthday"));
 			this.appDateColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("appDate"));
+			this.infoColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("info"));
 			this.patientTable1.setItems(null);
 			this.patientTable1.setItems(data);
 		}
@@ -165,8 +178,17 @@ public class AdminController implements Initializable {
 			stmt.setString(3, this.lastName.getText());
 			stmt.setString(4, this.gender.getText());
 			stmt.setString(5, this.email.getText());
-			stmt.setString(6, this.birthday.getEditor().getText());
-			stmt.setString(7, this.appDate.getEditor().getText());
+			stmt.setString(8, this.info.getText());
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			LocalDate bday = this.birthday.getValue();
+			LocalDate aday = this.appDate.getValue();
+			if (bday != null) {
+			    stmt.setString(6, formatter.format(bday));
+			}
+			if (aday != null) {
+				stmt.setString(7, formatter.format(aday));
+			}
 			
 			stmt.execute();
 			conn.close();
@@ -184,6 +206,7 @@ public class AdminController implements Initializable {
 		this.email.setText("");
 		this.birthday.setValue(null);
 		this.appDate.setValue(null);
+		this.info.setText("");
 	}
 	
 	/***** Admin  Tab *****/
@@ -230,9 +253,40 @@ public class AdminController implements Initializable {
 			}
 		}
 	}
+	
+	@FXML 
+	private void viewPatient(ActionEvent event) throws SQLException {
+		selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
+		if (selectedPatient != null) {
+			try {
+				Stage viewStage = new Stage();
+				FXMLLoader viewLoader = new FXMLLoader();
+				Pane viewRoot = (Pane)viewLoader.load(getClass().getResource("/admin/view/viewFXML.fxml").openStream());
+				
+				Scene viewScene = new Scene(viewRoot);
+				viewStage.setScene(viewScene);
+				viewStage.setTitle("View Menu");
+				viewStage.setResizable(false);
+				viewStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/***** Functionality Methods *****/
+	public static final LocalDate LOCAL_DATE (String dateString){
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+	    LocalDate localDate = LocalDate.parse(dateString, formatter);
+	    return localDate;
+	}
 }
 
 
 
+
+//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+//LocalDate bday = LocalDate.parse(this.birthday.getPromptText()); 
+// LocalDate aday = LocalDate.parse("2018-11-27"); 
 
 

@@ -12,8 +12,9 @@ public class PatientData {
 	private StringProperty email;
 	private StringProperty birthday;
 	private StringProperty appDate;
+	private StringProperty info;
 	
-	public PatientData(String id, String firstName, String lastName, String gender, String email, String bday, String appDate) {
+	public PatientData(String id, String firstName, String lastName, String gender, String email, String bday, String appDate, String info) {
 		this.ID = new SimpleStringProperty(id);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
@@ -21,6 +22,7 @@ public class PatientData {
 		this.email = new SimpleStringProperty(email);
 		this.birthday = new SimpleStringProperty(bday);
 		this.appDate = new SimpleStringProperty(appDate);
+		this.info = new SimpleStringProperty(info);
 	}
 	
 	public String getID() {
@@ -49,6 +51,10 @@ public class PatientData {
 	
 	public String getAppDate() {
 		return appDate.get();
+	}
+	
+	public String getInfo() {
+		return info.get();
 	}
 
 	public void setID(String id) {
@@ -79,6 +85,10 @@ public class PatientData {
 		this.appDate.set(appDate);
 	}
 	
+	public void setInfo(String info) {
+		this.info.set(info);
+	}
+	
 	public StringProperty idProperty() {
 		return this.ID;
 	}
@@ -105,5 +115,9 @@ public class PatientData {
 	
 	public StringProperty appDateProperty() {
 		return this.appDate;
+	}
+	
+	public StringProperty infoProperty() {
+		return this.info;
 	}
 }

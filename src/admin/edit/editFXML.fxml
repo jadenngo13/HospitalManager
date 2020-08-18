@@ -4,16 +4,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.edit.EditController">
+<AnchorPane prefHeight="517.0" prefWidth="473.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.edit.EditController">
    <children>
       <AnchorPane layoutX="-50.0" layoutY="-159.0" prefHeight="582.0" prefWidth="512.0">
          <children>
-            <VBox layoutX="72.0" layoutY="213.0" prefHeight="278.0" prefWidth="134.0">
+            <VBox layoutX="72.0" layoutY="213.0" prefHeight="329.0" prefWidth="134.0">
                <children>
                   <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="ID">
                      <VBox.margin>
@@ -52,9 +53,14 @@
                         <Insets top="20.0" />
                      </VBox.margin>
                   </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="128.0" text="Information">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
             </VBox>
-            <VBox layoutX="206.0" layoutY="213.0" prefHeight="278.0" prefWidth="317.0">
+            <VBox layoutX="206.0" layoutY="213.0" prefHeight="336.0" prefWidth="317.0">
                <children>
                   <TextField fx:id="id" prefHeight="27.0" prefWidth="44.0" promptText="ID">
                      <VBox.margin>
@@ -91,6 +97,11 @@
                         <Insets right="225.0" top="10.0" />
                      </VBox.margin>
                   </DatePicker>
+                  <TextArea fx:id="info" prefHeight="72.0" prefWidth="285.0" promptText="Existing conditions, subscriptions, etc.">
+                     <VBox.margin>
+                        <Insets right="30.0" top="10.0" />
+                     </VBox.margin>
+                  </TextArea>
                </children>
             </VBox>
             <Label layoutX="79.0" layoutY="182.0" text="Edit Patient Profile Information">
@@ -98,8 +109,8 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Button fx:id="clearButton" layoutX="206.0" layoutY="491.0" mnemonicParsing="false" onAction="#clearEntry" prefHeight="27.0" prefWidth="164.0" text="Clear" />
-            <Button fx:id="submitButton" layoutX="206.0" layoutY="527.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="164.0" text="Submit" />
+            <Button fx:id="clearButton" layoutX="206.0" layoutY="569.0" mnemonicParsing="false" onAction="#clearEntry" prefHeight="27.0" prefWidth="164.0" text="Clear" />
          </children></AnchorPane>
+      <Button fx:id="submitButton" layoutX="155.0" layoutY="444.0" mnemonicParsing="false" onAction="#submitEntry" prefHeight="27.0" prefWidth="164.0" text="Submit" />
    </children>
 </AnchorPane>

@@ -9,33 +9,35 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.AdminController">
+<AnchorPane prefHeight="748.0" prefWidth="1248.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.AdminController">
    <children>
-      <AnchorPane layoutX="-85.0" layoutY="-76.0" prefHeight="750.0" prefWidth="1400.0">
+      <AnchorPane layoutX="-85.0" layoutY="-76.0" prefHeight="824.0" prefWidth="1362.0">
          <children>
-            <TabPane layoutX="80.0" layoutY="74.0" prefHeight="750.0" prefWidth="1400.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane layoutX="80.0" layoutY="74.0" prefHeight="750.0" prefWidth="1431.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Patients">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="717.0" prefWidth="1436.0">
                            <children>
-                              <HBox layoutX="413.0" layoutY="-2.0" prefHeight="750.0" prefWidth="1000.0">
+                              <HBox layoutX="413.0" layoutY="-2.0" prefHeight="750.0" prefWidth="1022.0">
                                  <children>
-                                    <TableView fx:id="patientTable" prefHeight="750.0" prefWidth="987.0">
+                                    <TableView fx:id="patientTable" prefHeight="750.0" prefWidth="1024.0">
                                       <columns>
-                                        <TableColumn fx:id="idColumn" prefWidth="63.44140625" text="id" />
-                                        <TableColumn fx:id="fnColumn" prefWidth="194.92919921875" text="First Name" />
-                                          <TableColumn fx:id="lnColumn" prefWidth="191.07073974609375" text="Last Name" />
-                                          <TableColumn fx:id="genderColumn" prefWidth="59.999267578125" text="Gender" />
-                                          <TableColumn fx:id="emailColumn" prefWidth="213.57098388671875" text="Email" />
-                                          <TableColumn fx:id="birthdayColumn" prefWidth="132.606689453125" text="Birthday" />
-                                          <TableColumn fx:id="appDateColumn" prefWidth="130.893310546875" text="App. Date" />
+                                        <TableColumn fx:id="idColumn" prefWidth="51.917938232421875" text="id" />
+                                        <TableColumn fx:id="fnColumn" prefWidth="159.427490234375" text="First Name" />
+                                          <TableColumn fx:id="lnColumn" prefWidth="163.07244873046875" text="Last Name" />
+                                          <TableColumn fx:id="genderColumn" prefWidth="77.21771240234375" text="Gender" />
+                                          <TableColumn fx:id="emailColumn" prefWidth="193.47149658203125" text="Email" />
+                                          <TableColumn fx:id="birthdayColumn" prefWidth="129.2806396484375" text="Birthday" />
+                                          <TableColumn fx:id="appDateColumn" prefWidth="124.60888671875" text="App. Date" />
+                                          <TableColumn fx:id="infoColumn" prefWidth="120.5" text="Info" />
                                       </columns>
                                     </TableView>
                                  </children>
@@ -82,6 +84,11 @@
                                           <Insets left="20.0" right="20.0" />
                                        </VBox.margin>
                                     </DatePicker>
+                                    <TextArea fx:id="info" prefHeight="104.0" prefWidth="371.0" promptText="Information">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextArea>
                                     <Button mnemonicParsing="false" onAction="#addPatient" prefHeight="27.0" prefWidth="371.0" text="Submit">
                                        <VBox.margin>
                                           <Insets left="20.0" top="10.0" />
@@ -105,7 +112,7 @@
                 </Tab>
                   <Tab text="Admin Section">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="717.0" prefWidth="1282.0">
                            <children>
                               <VBox layoutX="1.0" layoutY="1.0" prefHeight="662.0" prefWidth="255.0">
                                  <children>
@@ -119,7 +126,7 @@
                                     </Label>
                                     <ButtonBar prefHeight="40.0" prefWidth="200.0">
                                       <buttons>
-                                        <Button fx:id="viewButton" mnemonicParsing="false" prefHeight="27.0" prefWidth="190.0" text="View" />
+                                        <Button fx:id="viewButton" mnemonicParsing="false" onAction="#viewPatient" prefHeight="27.0" prefWidth="190.0" text="View" />
                                           <Button fx:id="editButton" mnemonicParsing="false" onAction="#editPatient" prefHeight="27.0" prefWidth="190.0" text="Edit">
                                              <padding>
                                                 <Insets right="10.0" />
@@ -147,17 +154,18 @@
                                     </Button>
                                  </children>
                               </VBox>
-                              <HBox layoutX="286.0" prefHeight="722.0" prefWidth="1115.0">
+                              <HBox layoutX="286.0" prefHeight="722.0" prefWidth="1147.0">
                                  <children>
-                                    <TableView fx:id="patientTable1" prefHeight="722.0" prefWidth="1116.0">
+                                    <TableView fx:id="patientTable1" prefHeight="722.0" prefWidth="1147.0">
                                        <columns>
-                                          <TableColumn fx:id="idColumn1" prefWidth="63.44140625" text="id" />
-                                          <TableColumn fx:id="fnColumn1" prefWidth="240.54327392578125" text="First Name" />
-                                          <TableColumn fx:id="lnColumn1" prefWidth="229.95672607421875" text="Last Name" />
-                                          <TableColumn fx:id="genderColumn1" prefWidth="89.2003173828125" text="Gender" />
-                                          <TableColumn fx:id="emailColumn1" prefWidth="269.05267333984375" text="Email" />
-                                          <TableColumn fx:id="birthdayColumn1" prefWidth="113.4007568359375" text="Birthday" />
-                                          <TableColumn fx:id="appDateColumn1" prefWidth="107.4398193359375" text="App. Date" />
+                                          <TableColumn fx:id="idColumn1" prefWidth="51.917938232421875" text="id" />
+                                          <TableColumn fx:id="fnColumn1" prefWidth="159.427490234375" text="First Name" />
+                                          <TableColumn fx:id="lnColumn1" prefWidth="163.07244873046875" text="Last Name" />
+                                          <TableColumn fx:id="genderColumn1" prefWidth="67.5" text="Gender" />
+                                          <TableColumn fx:id="emailColumn1" prefWidth="222.5" text="Email" />
+                                          <TableColumn fx:id="birthdayColumn1" prefWidth="127.5" text="Birthday" />
+                                          <TableColumn fx:id="appDateColumn1" prefWidth="135.0" text="App. Date" />
+                                          <TableColumn fx:id="infoColumn1" prefWidth="218.5" text="Info" />
                                        </columns>
                                     </TableView>
                                  </children></HBox>
