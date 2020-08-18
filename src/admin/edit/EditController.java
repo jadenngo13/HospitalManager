@@ -17,8 +17,8 @@ import javafx.scene.control.TextField;
 
 import admin.AdminController;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import data.PatientData;
+import data.DoctorData;
 
 public class EditController implements Initializable {
 	

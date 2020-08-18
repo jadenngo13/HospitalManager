@@ -1,7 +1,7 @@
 package loginapp;
 
 public enum option {
-	Admin, Patient;
+	Admin, Patient, Doctor;
 	
 	private option() {}
 	

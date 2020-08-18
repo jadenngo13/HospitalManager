@@ -59,6 +59,9 @@ public class LoginController implements Initializable {
 					case "Admin":
 						adminLogin();
 						break;
+					case "Doctor":
+						doctorLogin();
+						break;
 				}
 			} else {
 				this.loginStatus.setText("Incorrect");
@@ -97,6 +100,22 @@ public class LoginController implements Initializable {
 			adminStage.setTitle("Admin Menu");
 			adminStage.setResizable(false);
 			adminStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void doctorLogin() {
+		try {
+			Stage doctorStage = new Stage();
+			FXMLLoader doctorLoader = new FXMLLoader();
+			Pane doctorRoot = (Pane)doctorLoader.load(getClass().getResource("/doctor/doctorFXML.fxml").openStream());
+			
+			Scene doctorScene = new Scene(doctorRoot);
+			doctorStage.setScene(doctorScene);
+			doctorStage.setTitle("Doctor Menu");
+			doctorStage.setResizable(false);
+			doctorStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

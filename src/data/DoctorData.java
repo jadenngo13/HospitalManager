@@ -1,9 +1,9 @@
-package admin;
+package data;
 
-import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-public class PatientData {
+public class DoctorData {
 	
 	private StringProperty ID;
 	private StringProperty firstName;
@@ -11,18 +11,18 @@ public class PatientData {
 	private StringProperty gender;
 	private StringProperty email;
 	private StringProperty birthday;
-	private StringProperty appDate;
-	private StringProperty info;
+	private StringProperty department;
+	private StringProperty patients;
 	
-	public PatientData(String id, String firstName, String lastName, String gender, String email, String bday, String appDate, String info) {
+	public DoctorData(String id, String firstName, String lastName, String gender, String email, String bday, String department, String patients) {
 		this.ID = new SimpleStringProperty(id);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
 		this.gender = new SimpleStringProperty(gender);
 		this.email = new SimpleStringProperty(email);
 		this.birthday = new SimpleStringProperty(bday);
-		this.appDate = new SimpleStringProperty(appDate);
-		this.info = new SimpleStringProperty(info);
+		this.department = new SimpleStringProperty(department);
+		this.patients = new SimpleStringProperty(patients);
 	}
 	
 	public String getID() {
@@ -49,12 +49,12 @@ public class PatientData {
 		return birthday.get();
 	}
 	
-	public String getAppDate() {
-		return appDate.get();
+	public String getDepartment() {
+		return department.get();
 	}
 	
-	public String getInfo() {
-		return info.get();
+	public String getPatients() {
+		return patients.get();
 	}
 
 	public void setID(String id) {
@@ -81,12 +81,12 @@ public class PatientData {
 		this.birthday.set(birthday);
 	}
 	
-	public void setAppDate(String appDate) {
-		this.appDate.set(appDate);
+	public void setDepartment(String department) {
+		this.department.set(department);
 	}
 	
-	public void setInfo(String info) {
-		this.info.set(info);
+	public void setPatients(String patients) {
+		this.patients.set(patients);
 	}
 	
 	public StringProperty idProperty() {
@@ -113,11 +113,11 @@ public class PatientData {
 		return this.birthday;
 	}
 	
-	public StringProperty appDateProperty() {
-		return this.appDate;
+	public StringProperty departmentProperty() {
+		return this.department;
 	}
 	
-	public StringProperty infoProperty() {
-		return this.info;
+	public StringProperty patientsProperty() {
+		return this.patients;
 	}
 }

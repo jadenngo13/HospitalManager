@@ -94,7 +94,7 @@
                                           <Insets left="20.0" top="10.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button layoutX="30.0" layoutY="191.0" mnemonicParsing="false" onAction="#clearEntry" prefHeight="27.0" prefWidth="371.0" text="Clear Entry">
+                                    <Button layoutX="30.0" layoutY="191.0" mnemonicParsing="false" onAction="#clearPatient" prefHeight="27.0" prefWidth="371.0" text="Clear Entry">
                                        <VBox.margin>
                                           <Insets left="20.0" />
                                        </VBox.margin>
@@ -110,6 +110,94 @@
                         </AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Doctors">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="717.0" prefWidth="1436.0">
+                           <children>
+                              <HBox layoutX="413.0" layoutY="-2.0" prefHeight="750.0" prefWidth="1022.0">
+                                 <children>
+                                    <TableView fx:id="doctorTable" prefHeight="750.0" prefWidth="1024.0">
+                                       <columns>
+                                          <TableColumn fx:id="idColumn2" prefWidth="51.917938232421875" text="id" />
+                                          <TableColumn fx:id="fnColumn2" prefWidth="159.427490234375" text="First Name" />
+                                          <TableColumn fx:id="lnColumn2" prefWidth="163.07244873046875" text="Last Name" />
+                                          <TableColumn fx:id="genderColumn2" prefWidth="77.21771240234375" text="Gender" />
+                                          <TableColumn fx:id="emailColumn2" prefWidth="193.47149658203125" text="Email" />
+                                          <TableColumn fx:id="birthdayColumn2" prefWidth="129.2806396484375" text="Birthday" />
+                                          <TableColumn fx:id="departmentColumn" prefWidth="120.5" text="Department" />
+                                          <TableColumn fx:id="patientsColumn" prefWidth="120.5" text="Patients" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </HBox>
+                              <VBox layoutX="3.0" layoutY="-4.0" prefHeight="732.0" prefWidth="411.0">
+                                 <children>
+                                    <Label prefHeight="43.0" prefWidth="412.0" text="Add Doctors">
+                                       <padding>
+                                          <Insets left="50.0" />
+                                       </padding>
+                                    </Label>
+                                    <TextField fx:id="id2" promptText="id">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextField fx:id="firstName2" layoutX="10.0" layoutY="53.0" promptText="First Name">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextField fx:id="lastName2" layoutX="10.0" layoutY="80.0" promptText="Last Name">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextField fx:id="gender2" prefHeight="27.0" prefWidth="392.0" promptText="Gender">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextField fx:id="email2" layoutX="10.0" layoutY="107.0" promptText="Email">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <DatePicker fx:id="birthday2" prefHeight="30.0" prefWidth="371.0" promptText="Date of Birth">
+                                       <VBox.margin>
+                                          <Insets left="20.0" />
+                                       </VBox.margin>
+                                    </DatePicker>
+                                    <TextField fx:id="department" promptText="Department">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextField fx:id="patients" promptText="Patients">
+                                       <VBox.margin>
+                                          <Insets left="20.0" right="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <Button mnemonicParsing="false" onAction="#addDoctor" prefHeight="27.0" prefWidth="371.0" text="Submit">
+                                       <VBox.margin>
+                                          <Insets left="20.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button layoutX="30.0" layoutY="191.0" mnemonicParsing="false" onAction="#clearDoctor" prefHeight="27.0" prefWidth="371.0" text="Clear Entry">
+                                       <VBox.margin>
+                                          <Insets left="20.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button layoutX="10.0" layoutY="218.0" mnemonicParsing="false" onAction="#loadDoctorData" prefHeight="27.0" prefWidth="371.0" text="Load Data">
+                                       <VBox.margin>
+                                          <Insets left="20.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
                   <Tab text="Admin Section">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="717.0" prefWidth="1282.0">
@@ -142,7 +230,7 @@
                                           <Insets left="30.0" top="10.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#loadPatientData1" prefHeight="27.0" prefWidth="234.0" text="Refresh">
+                                    <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshPatientData" prefHeight="27.0" prefWidth="234.0" text="Refresh">
                                        <VBox.margin>
                                           <Insets left="30.0" top="10.0" />
                                        </VBox.margin>

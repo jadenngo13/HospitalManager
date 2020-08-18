@@ -14,7 +14,7 @@
          	<Label fx:id="dbStatus" layoutX="183.0" layoutY="135.0" />
             <TextField fx:id="username" layoutX="202.0" layoutY="187.0" prefHeight="27.0" prefWidth="275.0" />
             <PasswordField fx:id="password" layoutX="203.0" layoutY="226.0" prefHeight="27.0" prefWidth="275.0" />
-            <ComboBox fx:id="combo" layoutX="202.0" layoutY="264.0" prefWidth="150.0" promptText="Admin/Patient" />
+            <ComboBox fx:id="combo" layoutX="202.0" layoutY="264.0" prefWidth="150.0" promptText="Admin/Patient/Doctor" />
             <Button fx:id="loginButton" layoutX="202.0" layoutY="300.0" mnemonicParsing="false" onAction="#Login" prefHeight="27.0" prefWidth="275.0" text="Login" />
             <Label layoutX="107.0" layoutY="135.0" text="DB Status" />
             <Label layoutX="122.0" layoutY="192.0" text="Username" />
