@@ -16,12 +16,14 @@ import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -122,6 +124,10 @@ public class AdminController implements Initializable {
 	@FXML 
 	private Button saveButton;
 	@FXML
+	private Tab patientTab;
+	@FXML
+	private Tab doctorTab;
+	@FXML
 	private TableView<PatientData> patientTable1;
 	@FXML
 	private TableColumn<PatientData, String> idColumn1;
@@ -139,20 +145,43 @@ public class AdminController implements Initializable {
 	private TableColumn<PatientData, String> appDateColumn1;
 	@FXML
 	private TableColumn<PatientData, String> infoColumn1;
+	@FXML
+	private TableView<DoctorData> doctorTable1;
+	@FXML
+	private TableColumn<DoctorData, String> idColumn3;
+	@FXML
+	private TableColumn<DoctorData, String> fnColumn3;
+	@FXML
+	private TableColumn<DoctorData, String> lnColumn3;
+	@FXML
+	private TableColumn<DoctorData, String> genderColumn3;
+	@FXML
+	private TableColumn<DoctorData, String> emailColumn3;
+	@FXML
+	private TableColumn<DoctorData, String> birthdayColumn3;
+	@FXML
+	private TableColumn<DoctorData, String> departmentColumn1;
+	@FXML
+	private TableColumn<DoctorData, String> patientsColumn1;
 	
 	
 	private dbConnection dc;
 	private ObservableList<PatientData> patientData;
 	private ObservableList<DoctorData> doctorData;
 	
+	private String adminSectionTab = "Patients";
+	
 	private String sqlLoadPatients = "SELECT * FROM patients";
 	private String sqlLoadDoctors = "SELECT * FROM doctors";
 	private String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	private String sqlDel = "DELETE FROM patients WHERE id=?";
+	private String sqlDelPatients = "DELETE FROM patients WHERE id=?";
+	private String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
 	
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
+	ArrayList<DoctorData> doctorsToDel = new ArrayList<DoctorData>();
 	public static PatientData selectedPatient;
+	public static DoctorData selectedDoctor;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
@@ -210,7 +239,7 @@ public class AdminController implements Initializable {
 			this.infoColumn1.setCellValueFactory(new PropertyValueFactory<PatientData, String>("info"));
 			this.patientTable1.setItems(null);
 			this.patientTable1.setItems(patientData);
-		} else {
+		} else if (tableNum == 2) {
 			this.idColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("ID"));
 			this.fnColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("firstName"));
 			this.lnColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("lastName"));
@@ -221,6 +250,17 @@ public class AdminController implements Initializable {
 			this.patientsColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("patients"));
 			this.doctorTable.setItems(null);
 			this.doctorTable.setItems(doctorData);
+		} else if (tableNum == 3) {
+			this.idColumn3.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("ID"));
+			this.fnColumn3.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("firstName"));
+			this.lnColumn3.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("lastName"));
+			this.genderColumn3.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("gender"));
+			this.emailColumn3.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("email"));
+			this.birthdayColumn3.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("birthday"));
+			this.departmentColumn1.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("department"));
+			this.patientsColumn1.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("patients"));
+			this.doctorTable1.setItems(null);
+			this.doctorTable1.setItems(doctorData);
 		}
 	}
 	 
@@ -231,7 +271,7 @@ public class AdminController implements Initializable {
 	
 	@FXML
 	private void clearPatient(ActionEvent event) {
-		clearEntry(event, "patient");
+		clearEntry("patient");
 	}
 	
 	/***** Doctors  Tab *****/
@@ -242,7 +282,7 @@ public class AdminController implements Initializable {
 	
 	@FXML
 	private void clearDoctor(ActionEvent event) {
-		clearEntry(event, "doctor");
+		clearEntry("doctor");
 	}
 	
 	@FXML
@@ -254,25 +294,50 @@ public class AdminController implements Initializable {
 	/***** Admin  Tab *****/
 	
 	@FXML
-	private void deletePatient(ActionEvent event) throws SQLException {
-		selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
-		patientsToDel.add(selectedPatient);
-	    patientTable1.getItems().remove(selectedPatient);
-	    selectedPatient = null;
+	private void patientTab(Event event) {
+		if (patientTab.isSelected()) {
+			adminSectionTab = "Patients";
+			selectedDoctor = null;
+		}
+	}
+	
+	@FXML
+	private void doctorTab(Event event) {
+		if (doctorTab.isSelected()) {
+			adminSectionTab = "Doctors";
+			selectedPatient = null;
+		}
 	}
 	
 	@FXML
 	private void saveData(ActionEvent event) throws SQLException {
-		for (PatientData patient : patientsToDel) {
-			try {
-				Connection conn = dbConnection.getConnection();
-				
-				PreparedStatement stmt = conn.prepareStatement(sqlDel);
-			    stmt.setString(1, patient.getID());
-			    stmt.executeUpdate();
-			} catch (SQLException e) {
-				System.err.println("Error: " + e);
+		Connection conn = null;
+		if (adminSectionTab.equals("Patients")) {
+			for (PatientData patient : patientsToDel) {
+				try {
+					conn = dbConnection.getConnection();
+					
+					PreparedStatement stmt = conn.prepareStatement(sqlDelPatients);
+				    stmt.setString(1, patient.getID());
+				    stmt.executeUpdate();
+				} catch (SQLException e) {
+					System.err.println("Error: " + e);
+				}
 			}
+		} else if (adminSectionTab.equals("Doctors")){
+			for (DoctorData doctor : doctorsToDel) {
+				try {
+					conn = dbConnection.getConnection();
+					
+					PreparedStatement stmt = conn.prepareStatement(sqlDelDoctors);
+				    stmt.setString(1, doctor.getID());
+				    stmt.executeUpdate();
+				} catch (SQLException e) {
+					System.err.println("Error: " + e);
+				}
+			}
+		} else {
+			return;
 		}
 	}
 	
@@ -297,28 +362,24 @@ public class AdminController implements Initializable {
 	}
 	
 	@FXML
-	private void refreshPatientData(ActionEvent event) throws SQLException {
-		loadData(event, 1);
+	private void refreshData(ActionEvent event) throws SQLException {
+		if (adminSectionTab.equals("Patients")) {
+			loadData(event, 1);
+		} else {
+			loadData(event, 3);
+		}
 	}
 	
 	@FXML 
 	private void viewPatient(ActionEvent event) throws SQLException {
 		selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
-		if (selectedPatient != null) {
-			try {
-				Stage viewStage = new Stage();
-				FXMLLoader viewLoader = new FXMLLoader();
-				Pane viewRoot = (Pane)viewLoader.load(getClass().getResource("/admin/view/viewFXML.fxml").openStream());
-				
-				Scene viewScene = new Scene(viewRoot);
-				viewStage.setScene(viewScene);
-				viewStage.setTitle("View Menu");
-				viewStage.setResizable(false);
-				viewStage.show();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		viewEntry();
+	}
+	
+	@FXML
+	private void viewDoctor(ActionEvent event) throws SQLException {
+		selectedDoctor = doctorTable1.getSelectionModel().getSelectedItem();
+		viewEntry();
 	}
 	
 	/***** Functionality Methods *****/
@@ -335,7 +396,7 @@ public class AdminController implements Initializable {
 			PreparedStatement stmt = null;
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
-			if (type.equals("patient")) {
+			if (type.equals("patient")) { //SQL query inserts that differ for patients
 				stmt = conn.prepareStatement(sqlInsertPatient);	
 				stmt.setString(1, this.id.getText());
 				stmt.setString(2, this.firstName.getText());
@@ -346,7 +407,7 @@ public class AdminController implements Initializable {
 				if (bday != null) {
 				    stmt.setString(6, formatter.format(bday));
 				}
-				LocalDate aday = this.appDate.getValue(); // SQL query inserts that differ in patients
+				LocalDate aday = this.appDate.getValue(); 
 				if (aday != null) {
 					stmt.setString(7, formatter.format(aday));
 				}
@@ -373,7 +434,7 @@ public class AdminController implements Initializable {
 		}
 	}
 	
-	private void clearEntry(ActionEvent event, String type) {
+	private void clearEntry(String type) {
 		if (type.equals("patient")) {
 			this.id.setText(null);
 			this.firstName.setText(null);
@@ -392,6 +453,42 @@ public class AdminController implements Initializable {
 			this.birthday2.setValue(null);
 			this.department.setText(null);
 			this.patients.setText(null);
+		}
+	}
+	
+	@FXML
+	private void viewEntry() throws SQLException {
+		if (selectedPatient != null || selectedDoctor != null) {
+			try {
+				Stage viewStage = new Stage();
+				FXMLLoader viewLoader = new FXMLLoader();
+				Pane viewRoot = (Pane)viewLoader.load(getClass().getResource("/admin/view/viewFXML.fxml").openStream());
+				
+				Scene viewScene = new Scene(viewRoot);
+				viewStage.setScene(viewScene);
+				viewStage.setTitle("View Menu");
+				viewStage.setResizable(false);
+				viewStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@FXML
+	private void deleteEntry(ActionEvent event) throws SQLException {
+		if (adminSectionTab.equals("Patients")) {
+			selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
+			patientsToDel.add(selectedPatient);
+		    patientTable1.getItems().remove(selectedPatient);
+		    selectedPatient = null;
+		} else if (adminSectionTab.equals("Doctors")) {
+			selectedDoctor = doctorTable1.getSelectionModel().getSelectedItem();
+			doctorsToDel.add(selectedDoctor);
+		    doctorTable1.getItems().remove(selectedDoctor);
+		    selectedDoctor = null;
+		} else {
+			return;
 		}
 	}
 }

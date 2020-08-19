@@ -6,7 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class LoginModel {
+	
+	public static String docID;
+	public int patID;
+	
 	Connection connection;
 	
 	public LoginModel() {
@@ -31,6 +36,7 @@ public class LoginModel {
 		
 		
 		String sqlQuery = "SELECT * FROM login WHERE username = ? and password = ? and department = ?";
+		String sqlGetDOCID = "SELECT id FROM doctors WHERE pass=?";
 		
 		try {
 			statement = this.connection.prepareStatement(sqlQuery);
@@ -42,6 +48,12 @@ public class LoginModel {
 		
 			boolean bool;
 			if (rs.next()) {
+				if (option.equals("Doctor")) {
+					statement = this.connection.prepareStatement(sqlGetDOCID);
+					statement.setString(1, pass);
+					rs = statement.executeQuery();
+					docID = rs.getString(1);
+				}
 				return true;
 			}
 			return false;

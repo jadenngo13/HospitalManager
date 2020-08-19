@@ -4,6 +4,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import dbUtil.dbConnection;
@@ -82,14 +84,21 @@ public class EditController implements Initializable {
 		if (entryNotNull) {
 			Connection conn = dbConnection.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sqlSave);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
 			stmt.setString(1, this.id.getText());
 			stmt.setString(2, this.firstName.getText());
 			stmt.setString(3, this.lastName.getText());
 			stmt.setString(4, this.gender.getText());
 			stmt.setString(5, this.email.getText());
-			stmt.setString(6, this.birthday.getEditor().getText());
-			stmt.setString(7, this.appDate.getEditor().getText());
+			LocalDate bday = this.birthday.getValue();
+			if (bday != null) {
+			    stmt.setString(6, formatter.format(bday));
+			}
+			LocalDate aday = this.appDate.getValue(); 
+			if (aday != null) {
+				stmt.setString(7, formatter.format(aday));
+			}
 			stmt.setString(8, this.info.getText());
 			stmt.setString(9, AdminController.selectedPatient.getID());
 			

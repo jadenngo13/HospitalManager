@@ -25,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import dbUtil.dbConnection;
+import loginapp.LoginModel;
 
 public class DoctorController implements Initializable {
  
@@ -49,14 +50,17 @@ public class DoctorController implements Initializable {
 	
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	private ObservableList<PatientData> patientData;
+	String docID;
 	
 	private String sqlDelPatient = "DELETE FROM patients WHERE id=?";
 	private String sqlLoadPatients = "SELECT * FROM patients";
+	private String sqlGetDoctorData = "SELECT * FROM doctors";
 	
 	private dbConnection dc;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
+		System.out.println(LoginModel.docID);
 	}
 	
 	@FXML 
@@ -115,14 +119,15 @@ public class DoctorController implements Initializable {
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
-				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+				String patID = rs.getString(9);
+				if (patID.equals("2")) {
+					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+				}
 			}
 			
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
-		
-		System.out.println(patientData.size());
 		
 		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
 		this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));

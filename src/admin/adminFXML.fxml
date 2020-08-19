@@ -214,7 +214,7 @@
                                     </Label>
                                     <ButtonBar prefHeight="40.0" prefWidth="200.0">
                                       <buttons>
-                                        <Button fx:id="viewButton" mnemonicParsing="false" onAction="#viewPatient" prefHeight="27.0" prefWidth="190.0" text="View" />
+                                        <Button fx:id="viewButton" mnemonicParsing="false" onAction="#viewEntry" prefHeight="27.0" prefWidth="190.0" text="View" />
                                           <Button fx:id="editButton" mnemonicParsing="false" onAction="#editPatient" prefHeight="27.0" prefWidth="190.0" text="Edit">
                                              <padding>
                                                 <Insets right="10.0" />
@@ -225,12 +225,12 @@
                                           <Insets left="10.0" top="10.0" />
                                        </VBox.margin>
                                     </ButtonBar>
-                                    <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deletePatient" prefHeight="27.0" prefWidth="232.0" text="Delete">
+                                    <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteEntry" prefHeight="27.0" prefWidth="232.0" text="Delete">
                                        <VBox.margin>
                                           <Insets left="30.0" top="10.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshPatientData" prefHeight="27.0" prefWidth="234.0" text="Refresh">
+                                    <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshData" prefHeight="27.0" prefWidth="234.0" text="Refresh">
                                        <VBox.margin>
                                           <Insets left="30.0" top="10.0" />
                                        </VBox.margin>
@@ -242,20 +242,56 @@
                                     </Button>
                                  </children>
                               </VBox>
-                              <HBox layoutX="286.0" prefHeight="722.0" prefWidth="1147.0">
+                              <HBox layoutX="286.0" prefHeight="717.0" prefWidth="1147.0">
                                  <children>
-                                    <TableView fx:id="patientTable1" prefHeight="722.0" prefWidth="1147.0">
-                                       <columns>
-                                          <TableColumn fx:id="idColumn1" prefWidth="51.917938232421875" text="id" />
-                                          <TableColumn fx:id="fnColumn1" prefWidth="159.427490234375" text="First Name" />
-                                          <TableColumn fx:id="lnColumn1" prefWidth="163.07244873046875" text="Last Name" />
-                                          <TableColumn fx:id="genderColumn1" prefWidth="67.5" text="Gender" />
-                                          <TableColumn fx:id="emailColumn1" prefWidth="222.5" text="Email" />
-                                          <TableColumn fx:id="birthdayColumn1" prefWidth="127.5" text="Birthday" />
-                                          <TableColumn fx:id="appDateColumn1" prefWidth="135.0" text="App. Date" />
-                                          <TableColumn fx:id="infoColumn1" prefWidth="218.5" text="Info" />
-                                       </columns>
-                                    </TableView>
+                                    <TabPane prefHeight="717.0" prefWidth="1149.0" tabClosingPolicy="UNAVAILABLE">
+                                      <tabs>
+                                        <Tab fx:id="patientTab" onSelectionChanged="#patientTab" text="Patients">
+                                          <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="684.0" prefWidth="1185.0">
+                                                   <children>
+                                                      <TableView fx:id="patientTable1" prefHeight="687.0" prefWidth="1147.0">
+                                                         <columns>
+                                                            <TableColumn fx:id="idColumn1" prefWidth="51.917938232421875" text="id" />
+                                                            <TableColumn fx:id="fnColumn1" prefWidth="159.427490234375" text="First Name" />
+                                                            <TableColumn fx:id="lnColumn1" prefWidth="163.07244873046875" text="Last Name" />
+                                                            <TableColumn fx:id="genderColumn1" prefWidth="67.5" text="Gender" />
+                                                            <TableColumn fx:id="emailColumn1" prefWidth="222.5" text="Email" />
+                                                            <TableColumn fx:id="birthdayColumn1" prefWidth="127.5" text="Birthday" />
+                                                            <TableColumn fx:id="appDateColumn1" prefWidth="135.0" text="App. Date" />
+                                                            <TableColumn fx:id="infoColumn1" prefWidth="218.5" text="Info" />
+                                                         </columns>
+                                                      </TableView>
+                                                   </children>
+                                                </AnchorPane>
+                                          </content>
+                                        </Tab>
+                                        <Tab fx:id="doctorTab" onSelectionChanged="#doctorTab" text="Doctors">
+                                          <content>
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                   <children>
+                                                      <HBox prefHeight="687.0" prefWidth="1147.0">
+                                                         <children>
+                                                            <TableView fx:id="doctorTable1" prefHeight="687.0" prefWidth="1147.0">
+                                                               <columns>
+                                                                  <TableColumn fx:id="idColumn3" prefWidth="51.917938232421875" text="id" />
+                                                                  <TableColumn fx:id="fnColumn3" prefWidth="159.427490234375" text="First Name" />
+                                                                  <TableColumn fx:id="lnColumn3" prefWidth="163.07244873046875" text="Last Name" />
+                                                                  <TableColumn fx:id="genderColumn3" prefWidth="67.5" text="Gender" />
+                                                                  <TableColumn fx:id="emailColumn3" prefWidth="222.5" text="Email" />
+                                                                  <TableColumn fx:id="birthdayColumn3" prefWidth="148.4095458984375" text="Birthday" />
+                                                                  <TableColumn fx:id="departmentColumn1" prefWidth="163.5904541015625" text="Department" />
+                                                                  <TableColumn fx:id="patientsColumn1" prefWidth="169.077392578125" text="Patients" />
+                                                               </columns>
+                                                            </TableView>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </AnchorPane>
+                                          </content>
+                                        </Tab>
+                                      </tabs>
+                                    </TabPane>
                                  </children></HBox>
                            </children></AnchorPane>
                     </content>
