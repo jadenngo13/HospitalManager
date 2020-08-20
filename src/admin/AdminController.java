@@ -173,8 +173,8 @@ public class AdminController implements Initializable {
 	
 	private String sqlLoadPatients = "SELECT * FROM patients";
 	private String sqlLoadDoctors = "SELECT * FROM doctors";
-	private String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	private String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	private String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info, doctor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients, pass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private String sqlDelPatients = "DELETE FROM patients WHERE id=?";
 	private String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
 	
@@ -412,6 +412,7 @@ public class AdminController implements Initializable {
 					stmt.setString(7, formatter.format(aday));
 				}
 				stmt.setString(8, this.info.getText());
+				stmt.setString(9, "0");
 			} else { // SQL query inserts that differ for doctors
 				stmt = conn.prepareStatement(sqlInsertDoctor);
 				stmt.setString(1, this.id2.getText());
@@ -425,6 +426,7 @@ public class AdminController implements Initializable {
 				}
 				stmt.setString(7, this.department.getText());
 				stmt.setString(8, this.patients.getText());
+				stmt.setString(9, "none");
 			}
 			
 			stmt.execute();
@@ -458,11 +460,23 @@ public class AdminController implements Initializable {
 	
 	@FXML
 	private void viewEntry() throws SQLException {
+		if (adminSectionTab.equals("Patients")) {
+			selectedPatient = patientTable1.getSelectionModel().getSelectedItem();
+		} else {
+			selectedDoctor = doctorTable1.getSelectionModel().getSelectedItem();
+		}
+		
 		if (selectedPatient != null || selectedDoctor != null) {
 			try {
 				Stage viewStage = new Stage();
 				FXMLLoader viewLoader = new FXMLLoader();
-				Pane viewRoot = (Pane)viewLoader.load(getClass().getResource("/admin/view/viewFXML.fxml").openStream());
+				
+				Pane viewRoot = null;
+				if (selectedPatient != null) {
+					viewRoot = (Pane)viewLoader.load(getClass().getResource("/admin/view/viewFXML.fxml").openStream());
+				} else {
+					viewRoot = (Pane)viewLoader.load(getClass().getResource("/admin/view/viewDoctorFXML.fxml").openStream());
+				}
 				
 				Scene viewScene = new Scene(viewRoot);
 				viewStage.setScene(viewScene);

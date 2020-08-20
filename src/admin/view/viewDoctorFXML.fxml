@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="577.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.view.ViewDoctorController">
+   <children>
+      <AnchorPane layoutX="-68.0" layoutY="-168.0" prefHeight="500.0" prefWidth="500.0">
+         <children>
+            <VBox layoutX="68.0" layoutY="166.0" prefHeight="575.0" prefWidth="488.0">
+               <children>
+                  <Label text="ID">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="id" editable="false" prefHeight="27.0" prefWidth="34.0" promptText="ID">
+                     <VBox.margin>
+                        <Insets left="20.0" right="415.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Name">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="name" editable="false" prefHeight="27.0" prefWidth="150.0" promptText="Name">
+                     <VBox.margin>
+                        <Insets left="20.0" right="215.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Gender">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="gender" editable="false" prefHeight="27.0" prefWidth="150.0" promptText="Gender">
+                     <VBox.margin>
+                        <Insets left="20.0" right="365.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Email">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="email" editable="false" prefHeight="27.0" prefWidth="150.0" promptText="Email">
+                     <VBox.margin>
+                        <Insets left="20.0" right="190.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Birthday">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <DatePicker fx:id="birthday" editable="false" prefHeight="27.0" prefWidth="161.0" promptText="Birthday">
+                     <VBox.margin>
+                        <Insets left="20.0" top="5.0" />
+                     </VBox.margin>
+                  </DatePicker>
+                  <Label prefHeight="17.0" prefWidth="84.0" text="Department">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="department" promptText="Department">
+                     <VBox.margin>
+                        <Insets left="20.0" right="250.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label text="Patients">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="patientTable" prefHeight="200.0" prefWidth="100.0">
+                    <columns>
+                      <TableColumn fx:id="idColumn" prefWidth="30.0" text="ID" />
+                        <TableColumn fx:id="fnColumn" prefWidth="108.0" text="First Name" />
+                        <TableColumn fx:id="lnColumn" prefWidth="135.0" text="Last Name" />
+                        <TableColumn fx:id="genderColumn" prefWidth="64.0" text="Gender" />
+                        <TableColumn fx:id="emailColumn" prefWidth="113.76800537109375" text="Email" />
+                        <TableColumn fx:id="bdayColumn" minWidth="0.0" prefWidth="91.32684326171875" text="Birthday" />
+                        <TableColumn fx:id="appDateColumn" prefWidth="91.17315673828125" text="App. Date" />
+                        <TableColumn fx:id="infoColumn" prefWidth="106.91546630859375" text="Info" />
+                    </columns>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

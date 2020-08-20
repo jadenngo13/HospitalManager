@@ -35,8 +35,8 @@ public class LoginModel {
 		ResultSet rs = null;
 		
 		
-		String sqlQuery = "SELECT * FROM login WHERE username = ? and password = ? and department = ?";
-		String sqlGetDOCID = "SELECT id FROM doctors WHERE pass=?";
+		String sqlQuery = "SELECT * FROM login WHERE username=? and password=? and department=?";
+		String sqlGetDocID = "SELECT id FROM login WHERE username=? and password=? and department=?";
 		
 		try {
 			statement = this.connection.prepareStatement(sqlQuery);
@@ -45,26 +45,31 @@ public class LoginModel {
 			statement.setString(3, option);
 			
 			rs = statement.executeQuery();
-		
-			boolean bool;
+
 			if (rs.next()) {
-				if (option.equals("Doctor")) {
-					statement = this.connection.prepareStatement(sqlGetDOCID);
-					statement.setString(1, pass);
-					rs = statement.executeQuery();
-					docID = rs.getString(1);
+				// Get logged in doctor's id
+				PreparedStatement stmt = null;
+				ResultSet res = null;
+				stmt = this.connection.prepareStatement(sqlGetDocID);
+				stmt.setString(1, user);
+				stmt.setString(2, pass);
+				stmt.setString(3, option);
+				
+				res = stmt.executeQuery();
+				if (res.next()) {
+					docID = res.getString("id");
 				}
+				statement.close();
+				rs.close();
+				stmt.close();
+				res.close();
+				
 				return true;
 			}
 			return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
-		}
-		
-		finally {
-			statement.close();
-			rs.close();
 		}
 	}
 }

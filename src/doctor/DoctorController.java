@@ -60,7 +60,6 @@ public class DoctorController implements Initializable {
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
-		System.out.println(LoginModel.docID);
 	}
 	
 	@FXML 
@@ -119,8 +118,8 @@ public class DoctorController implements Initializable {
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
-				String patID = rs.getString(9);
-				if (patID.equals("2")) {
+				String patientsDoc = rs.getString(9);
+				if (patientsDoc.equals(LoginModel.docID)) {
 					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 				}
 			}
