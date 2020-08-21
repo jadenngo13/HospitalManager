@@ -113,6 +113,6 @@ public class EditController implements Initializable {
 	private boolean checkNull() {
 		return ((this.id.getText()!=null) && (this.firstName.getText()!=null) && (this.lastName.getText()!=null)
 				&& (this.gender.getText()!=null) && (this.email.getText()!=null) && (this.birthday.getValue()!=null)
-				&& (this.birthday.getValue()!=null) && (this.info.getText()!=null));
+				&& (this.appDate.getValue()!=null) && (this.info.getText()!=null));
 	}
 }
