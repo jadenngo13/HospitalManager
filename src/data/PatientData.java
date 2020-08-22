@@ -1,6 +1,8 @@
 package data;
 
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.CheckBox;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class PatientData {
@@ -13,8 +15,10 @@ public class PatientData {
 	private StringProperty birthday;
 	private StringProperty appDate;
 	private StringProperty info;
+	private StringProperty doctor;
+	private CheckBox select;
 	
-	public PatientData(String id, String firstName, String lastName, String gender, String email, String bday, String appDate, String info) {
+	public PatientData(String id, String firstName, String lastName, String gender, String email, String bday, String appDate, String info, String doctor) {
 		this.ID = new SimpleStringProperty(id);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
@@ -23,6 +27,8 @@ public class PatientData {
 		this.birthday = new SimpleStringProperty(bday);
 		this.appDate = new SimpleStringProperty(appDate);
 		this.info = new SimpleStringProperty(info);
+		this.doctor = new SimpleStringProperty(doctor);
+		this.select = new CheckBox();
 	}
 	
 	public String getID() {
@@ -55,6 +61,14 @@ public class PatientData {
 	
 	public String getInfo() {
 		return info.get();
+	}
+	
+	public String getDoctor() {
+		return doctor.get();
+	}
+	
+	public CheckBox getSelect() {
+		return this.select;
 	}
 
 	public void setID(String id) {
@@ -89,6 +103,14 @@ public class PatientData {
 		this.info.set(info);
 	}
 	
+	public void setDoctor(String doctor) {
+		this.doctor.set(doctor);
+	}
+	
+	public void setSelect(CheckBox select) {
+		this.select = select;
+	}
+	
 	public StringProperty idProperty() {
 		return this.ID;
 	}
@@ -119,5 +141,9 @@ public class PatientData {
 	
 	public StringProperty infoProperty() {
 		return this.info;
+	}
+	
+	public StringProperty doctorProperty() {
+		return this.doctor;
 	}
 }

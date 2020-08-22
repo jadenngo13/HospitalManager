@@ -76,7 +76,7 @@ public class ViewDoctorController implements Initializable {
 			while (rs.next()) {
 				System.out.println("here with " + rs.getString(9) + " and: " + AdminController.selectedDoctor.getID());
 				if (rs.getString(9).equals(AdminController.selectedDoctor.getID())) {
-					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
 				}
 			}
 			

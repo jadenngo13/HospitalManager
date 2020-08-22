@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="admin.edit.EditDoctorController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.edit.EditDoctorController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="552.0" prefWidth="473.0">
+      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="552.0" prefWidth="483.0">
          <children>
             <AnchorPane layoutX="-50.0" layoutY="-159.0" prefHeight="582.0" prefWidth="512.0">
                <children>
@@ -102,15 +101,16 @@
                               <Insets right="100.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TableView fx:id="patientTable" prefHeight="144.0" prefWidth="312.0">
-                          <columns>
-                            <TableColumn fx:id="idColumn" prefWidth="24.0" text="id" />
-                            <TableColumn fx:id="fnColumn" prefWidth="102.0" text="First Name" />
-                              <TableColumn fx:id="lnColumn" prefWidth="106.0" text="Last Name" />
-                              <TableColumn fx:id="appDateColumn" prefWidth="79.0" text="App. Date" />
-                          </columns>
+                        <TableView fx:id="patientTable" prefHeight="200.0" prefWidth="200.0">
+                           <columns>
+                              <TableColumn fx:id="selectColumn" prefWidth="27.0" />
+                              <TableColumn fx:id="idColumn" prefWidth="61.0" text="id" />
+                              <TableColumn fx:id="fnColumn" prefWidth="111.0" text="First Name" />
+                              <TableColumn fx:id="lnColumn" prefWidth="145.0" text="Last Name" />
+                              <TableColumn fx:id="appDateColumn" prefWidth="75.0" text="App. Date" />
+                           </columns>
                            <VBox.margin>
-                              <Insets right="5.0" top="5.0" />
+                              <Insets top="10.0" />
                            </VBox.margin>
                         </TableView>
                      </children>
@@ -123,8 +123,7 @@
                </children>
             </AnchorPane>
             <Button fx:id="submitButton" layoutX="167.0" layoutY="511.0" mnemonicParsing="false" onAction="#submitEntry" prefHeight="27.0" prefWidth="271.0" text="Submit" />
-            <Button fx:id="clearButton" layoutX="310.0" layoutY="473.0" mnemonicParsing="false" onAction="#clearEntry" prefHeight="27.0" prefWidth="128.0" text="Clear" />
-            <Button fx:id="editPatients" layoutX="167.0" layoutY="473.0" mnemonicParsing="false" onAction="#editPatients" prefHeight="27.0" prefWidth="134.0" text="Edit Patients" />
+            <Button fx:id="clearButton" layoutX="167.0" layoutY="473.0" mnemonicParsing="false" onAction="#clearEntry" prefHeight="27.0" prefWidth="271.0" text="Clear" />
          </children>
       </AnchorPane>
    </children>

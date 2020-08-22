@@ -90,8 +90,18 @@ public class AdminController implements Initializable {
 	private DatePicker birthday2;
 	@FXML
 	private TextField department;
+	@FXML 
+	private TableView<PatientData> patientsTable1;
 	@FXML
-	private TextField patients;
+	private TableColumn<PatientData, String> selectColumn;
+	@FXML
+	private TableColumn<PatientData, String> idColumn3;
+	@FXML
+	private TableColumn<PatientData, String> fnColumn3;
+	@FXML
+	private TableColumn<PatientData, String> lnColumn3;
+	@FXML
+	private TableColumn<PatientData, String> genderColumn3;
 	@FXML
 	private TableView<DoctorData> doctorTable; // Main doctor table
 	@FXML
@@ -121,10 +131,12 @@ public class AdminController implements Initializable {
 	
 	private String sqlLoadPatients = "SELECT * FROM patients";
 	private String sqlLoadDoctors = "SELECT * FROM doctors";
-	private String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info, doctor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	private String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients, pass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info, doctor) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private String sqlDelPatients = "DELETE FROM patients WHERE id=?";
 	private String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
+	public static String sqlUpdatePatients = "UPDATE patients SET doctor=(doctor||','||?) WHERE id=?";
+	public static String sqlUpdatePatientsDoctor = "UPDATE patients SET doctor=? WHERE id=?";
 	
 	private ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	private ArrayList<DoctorData> doctorsToDel = new ArrayList<DoctorData>();
@@ -136,19 +148,32 @@ public class AdminController implements Initializable {
 		this.dc = new dbConnection();
 	}
 	
+
+	@FXML
+	private void patientTab(Event event) throws SQLException {
+		adminTab = "Patients";
+		selectedDoctor = null;
+	}
+	
+	@FXML
+	private void doctorTab(Event event) throws SQLException {
+		adminTab = "Doctors";
+		selectedPatient = null;
+	}
+	
 	@FXML
 	private void refreshData(ActionEvent event) throws SQLException {
 		try {
 			Connection conn = dbConnection.getConnection();
 			ResultSet rs = null;
 			
-			if (adminTab.equals("Patients")) { // Both tables of type PatientData
-				this.patientData = FXCollections.observableArrayList();
-				rs = conn.createStatement().executeQuery(sqlLoadPatients);
-				while (rs.next()) {
-					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
-				}
-			} else {
+			this.patientData = FXCollections.observableArrayList();
+			rs = conn.createStatement().executeQuery(sqlLoadPatients);
+			while (rs.next()) {
+				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+			}
+		
+			if (adminTab.equals("Doctors")) {
 				this.doctorData = FXCollections.observableArrayList();
 				rs = conn.createStatement().executeQuery(sqlLoadDoctors);
 				while (rs.next()) {
@@ -172,6 +197,14 @@ public class AdminController implements Initializable {
 			this.patientTable.setItems(null);
 			this.patientTable.setItems(patientData);
 		} else if (adminTab.equals("Doctors")) {
+			this.selectColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("select"));
+			this.idColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
+			this.fnColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
+			this.lnColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
+			this.genderColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));
+			this.patientsTable1.setItems(null);
+			this.patientsTable1.setItems(patientData);
+			
 			this.idColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("ID"));
 			this.fnColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("firstName"));
 			this.lnColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("lastName"));
@@ -196,6 +229,7 @@ public class AdminController implements Initializable {
 					PreparedStatement stmt = conn.prepareStatement(sqlDelPatients);
 				    stmt.setString(1, patient.getID());
 				    stmt.executeUpdate();
+					stmt.close();
 				} catch (SQLException e) {
 					System.err.println("Error: " + e);
 				}
@@ -208,6 +242,7 @@ public class AdminController implements Initializable {
 					PreparedStatement stmt = conn.prepareStatement(sqlDelDoctors);
 				    stmt.setString(1, doctor.getID());
 				    stmt.executeUpdate();
+					stmt.close();
 				} catch (SQLException e) {
 					System.err.println("Error: " + e);
 				}
@@ -215,26 +250,6 @@ public class AdminController implements Initializable {
 		} else {
 			return;
 		}
-	}
-	
-	
-	/***** Functionality Methods *****/
-	@FXML
-	private void patientTab(ActionEvent event) throws SQLException {
-		adminTab = "Patients";
-		selectedDoctor = null;
-	}
-	
-	@FXML
-	private void doctorTab(ActionEvent event) throws SQLException {
-		adminTab = "Doctors";
-		selectedPatient = null;
-	}
-	
-	public static final LocalDate LOCAL_DATE (String dateString){
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-	    LocalDate localDate = LocalDate.parse(dateString, formatter);
-	    return localDate;
 	}
 
 	@FXML
@@ -260,7 +275,8 @@ public class AdminController implements Initializable {
 					stmt.setString(7, formatter.format(aday));
 				}
 				stmt.setString(8, this.info.getText());
-				stmt.setString(9, "0");
+				stmt.setString(9, null);
+				stmt.execute();
 			} else if (adminTab.equals("Doctors")) { // SQL query inserts that differ for doctors
 				stmt = conn.prepareStatement(sqlInsertDoctor);
 				stmt.setString(1, this.id2.getText());
@@ -273,21 +289,38 @@ public class AdminController implements Initializable {
 				    stmt.setString(6, formatter.format(bday));
 				}
 				stmt.setString(7, this.department.getText());
-				stmt.setString(8, this.patients.getText());
-				stmt.setString(9, "none");
+				
+				StringBuilder pats = new StringBuilder();
+				for (PatientData patient : patientData) {
+					if (patient.getSelect().isSelected()) {
+						pats.append(patient.getID() + ",");
+					}
+				}
+				stmt.setString(8, pats.toString());
+				stmt.execute();
+				
+				// Update patients
+				String[] patsArr = pats.toString().split(",");
+				for (String id : patsArr) {
+					stmt = conn.prepareStatement(sqlUpdatePatients);
+					stmt.setString(1, this.id2.getText());
+					stmt.setString(2, id);
+					stmt.execute();
+				}
 			} else {
 				System.out.println("No entry selected for add.");
 				return;
 			}
 			
-			stmt.execute();
+			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void clearEntry() {
+	@FXML
+	private void clearEntry(ActionEvent event) throws SQLException {
 		if (adminTab.equals("Patients")) {
 			this.id.setText(null);
 			this.firstName.setText(null);
@@ -305,7 +338,9 @@ public class AdminController implements Initializable {
 			this.email2.setText(null);
 			this.birthday2.setValue(null);
 			this.department.setText(null);
-			this.patients.setText(null);
+			for (PatientData patients : patientData) {
+				patients.getSelect().setSelected(false);
+			}
 		} else {
 			System.out.println("No entry selected for clear.");
 			return;
@@ -392,6 +427,12 @@ public class AdminController implements Initializable {
 			System.out.println("No entry selected for deletion.");
 			return;
 		}
+	}
+	
+	public static final LocalDate LOCAL_DATE (String dateString){
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+	    LocalDate localDate = LocalDate.parse(dateString, formatter);
+	    return localDate;
 	}
 }
 
