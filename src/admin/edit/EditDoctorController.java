@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import admin.AdminController;
+import data.DoctorData;
 import data.PatientData;
 import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
@@ -61,10 +62,9 @@ public class EditDoctorController implements Initializable {
 	
 	public PatientData selectedDoctorsPatient;
 	
+	private ObservableList<DoctorData> doctorData;
 	private ObservableList<PatientData> patientData;
-	
-	private String sqlLoadPatients = "SELECT * FROM patients";
-	private String sqlSave = "UPDATE doctors SET id=?, first_name=?, last_name=?, gender=?, email=?, birthday=?, department=?, patients=? WHERE id=?";
+	private ObservableList<PatientData> selectedPatients;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
@@ -75,18 +75,25 @@ public class EditDoctorController implements Initializable {
 			
 
 			this.patientData = FXCollections.observableArrayList();
-			rs = conn.createStatement().executeQuery(sqlLoadPatients);
+			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
 			while (rs.next()) {
 				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
-				String docsPats = patientData.get(patientData.size()-1).getDoctor();
-				String[] docsPatsArr = docsPats.split(",");
+				String[] docsPatsArr = rs.getString(9).split(",");
 				for (String patID : docsPatsArr) {
 					if (patID.equals(AdminController.selectedDoctor.getID())) {
 						this.patientData.get(patientData.size()-1).getSelect().setSelected(true);
 					}
 				}
 			}
+			
+			this.doctorData = FXCollections.observableArrayList();
+			rs = conn.createStatement().executeQuery(AdminController.sqlLoadDoctors);
+			while (rs.next()) {
+				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+			}
+			
+			this.selectedPatients = FXCollections.observableArrayList();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
@@ -124,10 +131,17 @@ public class EditDoctorController implements Initializable {
 	
 	@FXML
 	private void submitEntry(ActionEvent event) throws SQLException {
+		for (PatientData patient : patientData) {
+			if (patient.getSelect().isSelected()) {
+				selectedPatients.add(patient);
+			}
+		}
+		
 		boolean entryNotNull = checkNull();
 		if (entryNotNull) {
 			Connection conn = dbConnection.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(sqlSave);
+			PreparedStatement stmt = conn.prepareStatement(AdminController.sqlSave);
+			ResultSet rs = null;
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
 			stmt.setString(1, this.id.getText());
@@ -141,48 +155,47 @@ public class EditDoctorController implements Initializable {
 			}
 			stmt.setString(7, this.department.getText());
 			StringBuilder selectedPats = new StringBuilder();
-			for (PatientData patient : patientData) {
-				if (patient.getSelect().isSelected()) {
-					selectedPats.append(patient.getID() + ",");
-				}
+			for (PatientData selPatient : selectedPatients) {
+				selectedPats.append(selPatient.getID() + ",");
 			}
+			System.out.println("selectedPats: " + selectedPats.toString());
 			stmt.setString(8, selectedPats.toString());
 			stmt.setString(9, AdminController.selectedDoctor.getID());
 			stmt.execute();
 			
 			// Update patients to be added
 			stmt = conn.prepareStatement(AdminController.sqlUpdatePatients);
-			boolean skip = false;
-			for (PatientData patient : patientData) {
-				skip = false;
-				if (patient.getSelect().isSelected()) {
-					String[] docsArr = patient.getDoctor().split(",");
-					for (String docID : docsArr) {
-						if (docID.equals(AdminController.selectedDoctor.getID())) {
-							skip = true;
+			for (PatientData selPatient : selectedPatients) {
+				stmt.setString(1, AdminController.selectedDoctor.getID());
+				stmt.setString(2, selPatient.getID());
+				stmt.execute();
+			}
+			
+			// Update other doctor who had newly assigned patient
+			stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
+			for (PatientData selPatient : selectedPatients) {
+				for (DoctorData doctor : doctorData) {
+					if (!doctor.getID().equals(AdminController.selectedDoctor.getID())) {
+						String[] patsArr = doctor.getPatients().split(",");
+						StringBuilder newPats = new StringBuilder();
+						for (String patID : patsArr) {
+							if (!patID.equals(selPatient.getID())) {
+								newPats.append(patID + ",");
+							}
 						}
-					}
-					if (!skip) {
-						stmt.setString(1, AdminController.selectedDoctor.getID());
-						stmt.setString(2, patient.getID());
+						stmt.setString(1, newPats.toString()); //newPats
+						stmt.setString(2, doctor.getID());
 						stmt.execute();
 					}
 				}
 			}
 			
 			// Update patients to be removed
-			stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
+			stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);
 			StringBuilder newDoc = null;
 			for (PatientData patient : patientData) {
-				if (!patient.getSelect().isSelected()) {
-					String[] docArr = patient.getDoctor().split(",");
-					newDoc = new StringBuilder();
-					for (String docID : docArr) {
-						if (!docID.equals(AdminController.selectedDoctor.getID())) {
-							newDoc.append(docID + ",");
-						}
-					}
-					stmt.setString(1, newDoc.toString());
+				if ((!patient.getSelect().isSelected()) && patient.getDoctor().equals(AdminController.selectedDoctor.getID())) {
+					stmt.setString(1, "0");
 					stmt.setString(2, patient.getID());
 					stmt.execute();
 				}

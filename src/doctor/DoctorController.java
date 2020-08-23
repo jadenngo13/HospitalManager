@@ -49,12 +49,9 @@ public class DoctorController implements Initializable {
 	private TableColumn<PatientData, String> infoColumn;
 	
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
-	private ObservableList<PatientData> patientData;
-	String docID;
 	
-	private String sqlDelPatient = "DELETE FROM patients WHERE id=?";
-	private String sqlLoadPatients = "SELECT * FROM patients";
-	private String sqlGetDoctorData = "SELECT * FROM doctors";
+	private ObservableList<PatientData> patientData;
+	private ObservableList<DoctorData> doctorData;
 	
 	private dbConnection dc;
 	
@@ -114,13 +111,15 @@ public class DoctorController implements Initializable {
 	private void refreshPatientData(ActionEvent event) throws SQLException {
 		try {
 			Connection conn = dbConnection.getConnection();
-			ResultSet rs = conn.createStatement().executeQuery(sqlLoadPatients);
+			ResultSet rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
-				String patientsDoc = rs.getString(9);
-				if (patientsDoc.equals(LoginModel.docID)) {
-					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+				String[] docsPatsArr = rs.getString(9).split(",");
+				for (String patID : docsPatsArr) {
+					if (patID.equals(LoginModel.docID)) {
+						this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+					}
 				}
 			}
 			
@@ -142,16 +141,56 @@ public class DoctorController implements Initializable {
 	
 	@FXML
 	private void saveData(ActionEvent event) throws SQLException {
-		for (PatientData patient : patientsToDel) {
-			try {
-				Connection conn = dbConnection.getConnection();
+		try {
+			Connection conn = dbConnection.getConnection();
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
+			for (PatientData patient : patientsToDel) {
+				// Update doctor
+				String[] patients = null;
+				StringBuilder newPats = new StringBuilder();
+				rs = conn.createStatement().executeQuery(AdminController.sqlGetDoctorPatients);
+				if (rs.next()) {
+					patients = rs.getString(1).split(",");
+					for (String patID : patients) {
+						if (!patID.equals(patient.getID())) {
+							newPats.append(patID);
+						}
+					}
+				}
+				stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
+				stmt.setString(1, newPats.toString());
+				stmt.setString(2, LoginModel.docID);
 				
-				PreparedStatement stmt = conn.prepareStatement(sqlDelPatient);
-			    stmt.setString(1, patient.getID());
-			    stmt.executeUpdate();
-			} catch (SQLException e) {
-				System.err.println("Error: " + e);
+				// Update the patient
+				rs = conn.createStatement().executeQuery(AdminController.sqlUpdateDoctorsPatient);
+				String[] doctors = null; 
+				StringBuilder newDocs = new StringBuilder();
+				if (rs.next()) {
+					doctors = rs.getString(1).split(",");
+					for (String patID : patients) {
+						if (!patID.equals(patient.getID())) {
+							newPats.append(patID);
+						}
+					}
+				}
+				
+				stmt.setString(1, null);
+				stmt.setString(2, LoginModel.docID);
+				stmt.execute();
+			
+				// Delete the patient
+				stmt = conn.prepareStatement(AdminController.sqlDelPatients);
+				stmt.setString(1, patient.getID());
+			    stmt.execute();
 			}
+				
+			stmt.close();
+			rs.close();
+		    conn.close();
+		} catch (SQLException e) {
+			System.err.println("Error: " + e);
 		}
 	}
 }

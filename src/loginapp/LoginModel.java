@@ -10,7 +10,10 @@ import java.sql.SQLException;
 public class LoginModel {
 	
 	public static String docID;
-	public int patID;
+	public static String patID;
+	
+	private String sqlQuery = "SELECT * FROM login WHERE username=? and password=? and department=?";
+	private String sqlGetUserID = "SELECT id FROM login WHERE username=? and password=? and department=?";
 	
 	Connection connection;
 	
@@ -34,10 +37,6 @@ public class LoginModel {
 		PreparedStatement statement = null;
 		ResultSet rs = null;
 		
-		
-		String sqlQuery = "SELECT * FROM login WHERE username=? and password=? and department=?";
-		String sqlGetDocID = "SELECT id FROM login WHERE username=? and password=? and department=?";
-		
 		try {
 			statement = this.connection.prepareStatement(sqlQuery);
 			statement.setString(1, user);
@@ -47,18 +46,22 @@ public class LoginModel {
 			rs = statement.executeQuery();
 
 			if (rs.next()) {
-				// Get logged in doctor's id
 				PreparedStatement stmt = null;
 				ResultSet res = null;
-				stmt = this.connection.prepareStatement(sqlGetDocID);
+				
+				stmt = this.connection.prepareStatement(sqlGetUserID);
+				
 				stmt.setString(1, user);
 				stmt.setString(2, pass);
 				stmt.setString(3, option);
-				
 				res = stmt.executeQuery();
+				
 				if (res.next()) {
-					docID = res.getString("id");
+					if (option.equals("Doctor"))
+							docID = res.getString("id");
+					patID = res.getString("id");
 				}
+				
 				statement.close();
 				rs.close();
 				stmt.close();

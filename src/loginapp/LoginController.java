@@ -17,7 +17,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import patients.PatientsController;
+import patient.PatientController;
 
 public class LoginController implements Initializable {
 	
@@ -75,9 +75,7 @@ public class LoginController implements Initializable {
 		try {
 			Stage patientStage = new Stage();
 			FXMLLoader patientLoader = new FXMLLoader();
-			Pane patientRoot = (Pane)patientLoader.load(getClass().getResource("/patients/patientFXML.fxml").openStream());
-			
-			PatientsController patientsController = (PatientsController)patientLoader.getController();
+			Pane patientRoot = (Pane)patientLoader.load(getClass().getResource("/patient/patientFXML.fxml").openStream());
 			
 			Scene userScene = new Scene(patientRoot);
 			patientStage.setScene(userScene);
