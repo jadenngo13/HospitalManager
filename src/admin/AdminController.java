@@ -157,9 +157,10 @@ public class AdminController implements Initializable {
 	public static String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	public static String sqlDelPatients = "DELETE FROM patients WHERE id=?";
 	public static String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
+	public static String sqlDelUsers = "DELETE FROM login WHERE id=?";
 	public static String sqlUpdatePatients = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdateUsers = "UPDATE login SET username=?, password=?, department=? WHERE id=?";
-	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE id=?";
+	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE doctor=?";
 	public static String sqlUpdatePatientsDoctor = "UPDATE doctors SET patients=? WHERE id=?";
 	public static String sqlGetDoctorPatients = "SELECT patients FROM doctors WHERE id=?";
 	public static String sqlGetPatientsDoctor = "SELECT * FROM doctors WHERE id=?";
@@ -322,6 +323,10 @@ public class AdminController implements Initializable {
 					stmt = conn.prepareStatement(sqlDelPatients);
 				    stmt.setString(1, patient.getID());
 				    stmt.execute();
+				    
+				    stmt = conn.prepareStatement(sqlDelUsers);
+				    stmt.setString(1, patient.getID());
+				    stmt.execute();
 				  
 					stmt.close();
 					conn.close();
@@ -343,6 +348,10 @@ public class AdminController implements Initializable {
 				    stmt = conn.prepareStatement(sqlUpdateDoctorsPatient);
 				    stmt.setString(1, "-1");
 				    stmt.setString(2, doctor.getID());
+				    stmt.execute();
+				    
+				    stmt = conn.prepareStatement(sqlDelUsers);
+				    stmt.setString(1, doctor.getID());
 				    stmt.execute();
 				  
 					stmt.close();

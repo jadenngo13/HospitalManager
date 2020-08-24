@@ -51,10 +51,6 @@ public class DoctorController implements Initializable {
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	
 	private ObservableList<PatientData> patientData;
-	private ObservableList<DoctorData> doctorData;
-	
-	private PatientData selectedPatient;
-	private DoctorData selectedDoctor;
 	
 	private DoctorData user;
 	
@@ -85,8 +81,8 @@ public class DoctorController implements Initializable {
 	
 	@FXML 
 	private void viewPatient(ActionEvent event) throws SQLException {
-		this.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
-		if (this.selectedPatient != null) {
+		AdminController.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
+		if (AdminController.selectedPatient != null) {
 			try {
 				Stage viewStage = new Stage();
 				FXMLLoader viewLoader = new FXMLLoader();
@@ -105,8 +101,8 @@ public class DoctorController implements Initializable {
 	
 	@FXML
 	private void editPatient(ActionEvent event) throws SQLException {
-		this.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
-		if (this.selectedPatient != null) {
+		AdminController.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
+		if (AdminController.selectedPatient != null) {
 			try {
 				Stage editStage = new Stage();
 				FXMLLoader editLoader = new FXMLLoader();
@@ -125,10 +121,10 @@ public class DoctorController implements Initializable {
 
 	@FXML
 	private void deletePatient(ActionEvent event) throws SQLException {
-		this.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
-		patientsToDel.add(this.selectedPatient);
-	    doctorTable.getItems().remove(this.selectedPatient);
-	    this.selectedPatient = null;
+		AdminController.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
+		patientsToDel.add(AdminController.selectedPatient);
+	    doctorTable.getItems().remove(AdminController.selectedPatient);
+	    AdminController.selectedPatient = null;
 	}
 	
 	@FXML
