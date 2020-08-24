@@ -54,13 +54,11 @@ public class DoctorController implements Initializable {
 	
 	private DoctorData user;
 	
-	private dbConnection dc;
+	private PreparedStatement stmt;
+	
+	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		this.dc = new dbConnection();
-		
-		Connection conn = null;
-		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			conn = dbConnection.getConnection();
@@ -72,7 +70,6 @@ public class DoctorController implements Initializable {
 			if (rs.next()) {
 				this.user = new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8));
 			}
-			conn.close();
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,7 +130,6 @@ public class DoctorController implements Initializable {
 			// Clear patients to be deleted array
 			patientsToDel.clear();
 			
-			Connection conn = dbConnection.getConnection();
 			ResultSet rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
 			this.patientData = FXCollections.observableArrayList();
@@ -143,7 +139,6 @@ public class DoctorController implements Initializable {
 				}
 			}
 			rs.close();
-			conn.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
@@ -163,9 +158,6 @@ public class DoctorController implements Initializable {
 	@FXML
 	private void saveData(ActionEvent event) throws SQLException {
 		try {
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement stmt = null;
-			
 			for (PatientData patient : patientsToDel) {
 				
 				// Update doctor
@@ -187,9 +179,6 @@ public class DoctorController implements Initializable {
 				stmt.setString(2, patient.getID());
 				stmt.execute();
 			}
-				
-			stmt.close();
-		    conn.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}

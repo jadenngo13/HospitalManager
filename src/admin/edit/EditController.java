@@ -19,9 +19,6 @@ import javafx.scene.control.TextField;
 
 import admin.AdminController;
 
-import data.PatientData;
-import data.DoctorData;
-
 public class EditController implements Initializable {
 	
 	@FXML
@@ -46,11 +43,18 @@ public class EditController implements Initializable {
 	@FXML
 	private Button submitButton;
 	
-	private dbConnection dc;
+	private PreparedStatement stmt;
+	
+	private Connection conn;
+
 	private String sqlSave = "UPDATE patients SET id = ?, first_name = ?, last_name = ?, gender = ?, email = ?, birthday = ?, appointment_date = ?, info = ? WHERE id = ?";
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		this.dc = new dbConnection();
+		try {
+			conn = dbConnection.getConnection();
+		} catch (SQLException e) {
+			System.out.println("Error: " + e);
+		}
 		
 		this.birthday.setPromptText("Birthday");
 		this.appDate.setPromptText("App. Date");
@@ -82,8 +86,7 @@ public class EditController implements Initializable {
 	private void submitEntry(ActionEvent event) throws SQLException {
 		boolean entryNotNull = checkNull();
 		if (entryNotNull) {
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(sqlSave);
+			stmt = conn.prepareStatement(sqlSave);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
 			stmt.setString(1, this.id.getText());
@@ -101,9 +104,7 @@ public class EditController implements Initializable {
 			}
 			stmt.setString(8, this.info.getText());
 			stmt.setString(9, AdminController.selectedPatient.getID());
-			
 			stmt.execute();
-			conn.close();
 		} else {
 			System.out.println("Entry is missing values");
 		}

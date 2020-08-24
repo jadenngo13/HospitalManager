@@ -58,7 +58,8 @@ public class EditDoctorController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> appDateColumn;
 	
-	private dbConnection dc;
+	private PreparedStatement stmt;
+	private Connection conn;
 	
 	public PatientData selectedDoctorsPatient;
 	
@@ -67,10 +68,8 @@ public class EditDoctorController implements Initializable {
 	private ObservableList<PatientData> selectedPatients;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		this.dc = new dbConnection();
-		
 		try {
-			Connection conn = dbConnection.getConnection();
+			conn = dbConnection.getConnection();
 			ResultSet rs = null;
 			
 
@@ -139,8 +138,7 @@ public class EditDoctorController implements Initializable {
 		
 		boolean entryNotNull = checkNull();
 		if (entryNotNull) {
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(AdminController.sqlSave);
+			stmt = conn.prepareStatement(AdminController.sqlSave);
 			ResultSet rs = null;
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
@@ -200,9 +198,6 @@ public class EditDoctorController implements Initializable {
 					stmt.execute();
 				}
 			}
-			
-			stmt.close();
-			conn.close();
 		} else {
 			System.out.println("Entry is missing values");
 		}

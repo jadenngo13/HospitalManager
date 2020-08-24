@@ -1,6 +1,8 @@
 package admin.view;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import admin.AdminController;
@@ -29,10 +31,14 @@ public class ViewController implements Initializable {
 	private TextArea info;
 	
 	
-	private dbConnection dc;
+	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		this.dc = new dbConnection();
+		try {
+			conn = dbConnection.getConnection();
+		} catch (SQLException e) {
+			System.out.println("Error: " + e);
+		}
 		
 		this.id.setText(AdminController.selectedPatient.getID());
 		this.name.setText(AdminController.selectedPatient.getFirstName() + AdminController.selectedPatient.getLastName());

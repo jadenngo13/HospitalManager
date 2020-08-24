@@ -150,6 +150,9 @@ public class AdminController implements Initializable {
 	
 	private String adminTab = "Patients";
 	
+	private PreparedStatement stmt;
+	private Connection conn;
+	
 	public static String sqlLoadPatients = "SELECT * FROM patients";
 	public static String sqlLoadDoctors = "SELECT * FROM doctors";
 	public static String sqlLoadUsers = "SELECT * FROM login";
@@ -157,9 +160,9 @@ public class AdminController implements Initializable {
 	public static String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	public static String sqlDelPatients = "DELETE FROM patients WHERE id=?";
 	public static String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
-	public static String sqlDelUsers = "DELETE FROM login WHERE id=?";
+	public static String sqlDelUsers = "DELETE FROM login WHERE department=? AND id=?";
 	public static String sqlUpdatePatients = "UPDATE patients SET doctor=? WHERE id=?";
-	public static String sqlUpdateUsers = "UPDATE login SET username=?, password=?, department=? WHERE id=?";
+	public static String sqlUpdateUsers = "UPDATE login SET username=?, password=?, department=? WHERE department=? AND id=?";
 	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE doctor=?";
 	public static String sqlUpdateDoctorsPatient1 = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdatePatientsDoctor = "UPDATE doctors SET patients=? WHERE id=?";
@@ -171,8 +174,8 @@ public class AdminController implements Initializable {
 	public static String sqlCreateLogin = "INSERT INTO login(username, password, department, id) VALUES(?, ?, ?, ?)";
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		Connection conn;
 		ResultSet rs;
+		stmt = null;
 		
 		try {
 			conn = dbConnection.getConnection();
@@ -224,10 +227,8 @@ public class AdminController implements Initializable {
 	}
 	@FXML
 	private void refreshData(ActionEvent event) throws SQLException {
-		Connection conn = null;
 		ResultSet rs = null;
 		try {
-			conn = dbConnection.getConnection();
 			
 			if (adminTab.equals("Patients")) {
 				this.patientData = FXCollections.observableArrayList();
@@ -294,17 +295,13 @@ public class AdminController implements Initializable {
 			this.adminTable.setItems(null);
 			this.adminTable.setItems(userData);
 		}
-		conn.close();
 	}
 	
 	@FXML
 	private void saveData(ActionEvent event) throws SQLException {
-		Connection conn = null;
-		PreparedStatement stmt = null;
 		if (adminTab.equals("Patients")) {
 			try {
 				for (PatientData patient : patientsToDel) {
-					conn = dbConnection.getConnection();
 					
 					// Unassign patient from assigned doctor
 					stmt = conn.prepareStatement(sqlUpdatePatientsDoctor);
@@ -326,11 +323,9 @@ public class AdminController implements Initializable {
 				    stmt.execute();
 				    
 				    stmt = conn.prepareStatement(sqlDelUsers);
-				    stmt.setString(1, patient.getID());
+				    stmt.setString(1, "Patient");
+				    stmt.setString(2, patient.getID());
 				    stmt.execute();
-				    
-					stmt.close();
-					conn.close();
 				}
 				patientsToDel.clear();
 			} catch (SQLException e) {
@@ -339,7 +334,6 @@ public class AdminController implements Initializable {
 		} else if (adminTab.equals("Doctors")){
 			for (DoctorData doctor : doctorsToDel) {
 				try {
-					conn = dbConnection.getConnection();
 					
 					stmt = conn.prepareStatement(sqlDelDoctors);
 				    stmt.setString(1, doctor.getID());
@@ -352,11 +346,9 @@ public class AdminController implements Initializable {
 				    stmt.execute();
 				    
 				    stmt = conn.prepareStatement(sqlDelUsers);
-				    stmt.setString(1, doctor.getID());
+				    stmt.setString(1, "Doctor");
+				    stmt.setString(2, doctor.getID());
 				    stmt.execute();
-				  
-					stmt.close();
-					conn.close();
 				} catch (SQLException e) {
 					System.err.println("Error: " + e);
 				}
@@ -370,8 +362,6 @@ public class AdminController implements Initializable {
 	@FXML
 	private void addEntry(ActionEvent event) {
 		try {
-			Connection conn = dbConnection.getConnection();
-			PreparedStatement stmt = null;
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
 			if (adminTab.equals("Patients")) { //SQL query inserts that differ for patients
@@ -392,7 +382,7 @@ public class AdminController implements Initializable {
 				stmt.setString(8, this.info.getText());
 				stmt.setString(9, "-1");
 				stmt.execute();
-				createUser(conn, this.id.getText(), this.firstName.getText());
+				createUser(this.id.getText(), this.firstName.getText());
 			} else if (adminTab.equals("Doctors")) { // SQL query inserts that differ for doctors
 				stmt = conn.prepareStatement(sqlInsertDoctor);
 				stmt.setString(1, this.id2.getText());
@@ -423,14 +413,11 @@ public class AdminController implements Initializable {
 					stmt.setString(2, id);
 					stmt.execute();
 				}
-				createUser(conn, this.id2.getText(), this.firstName2.getText());
+				createUser(this.id2.getText(), this.firstName2.getText());
 			} else {
 				System.out.println("No entry selected for add.");
 				return;
 			}
-			
-			stmt.close();
-			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -556,8 +543,7 @@ public class AdminController implements Initializable {
 		}
 	}
 	
-	private void createUser(Connection conn, String id, String name) {
-		PreparedStatement stmt;
+	private void createUser(String id, String name) {
 		try {
 			if (adminTab.equals("Patients")) {
 				stmt = conn.prepareStatement(sqlCreateLogin);
@@ -598,8 +584,7 @@ public class AdminController implements Initializable {
 	      .limit(len)
 	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 	      .toString();
-	 
-	    System.out.println(generatedString);
+	    
 	    return generatedString;
 	}
 }

@@ -61,14 +61,15 @@ public class PatientController implements Initializable {
 	private ObservableList<DoctorData> doctorData;
 	private PatientData user;
 	
-	private dbConnection dc;
+	private PreparedStatement stmt;
+	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		try {
-			Connection conn = dbConnection.getConnection();
+			conn = dbConnection.getConnection();
 			ResultSet rs = null;
 			
-			PreparedStatement stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
+			stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
 			stmt.setString(1, LoginModel.patID);
 			
 			rs = stmt.executeQuery();
@@ -86,7 +87,6 @@ public class PatientController implements Initializable {
 			}
 			
 			rs.close();
-			conn.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}

@@ -27,10 +27,16 @@ public class EditUserController implements Initializable {
 	@FXML
 	private TextField id;
 	
-	private dbConnection dc;
+	private PreparedStatement stmt;
+	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		this.dc = new dbConnection();
+		try {
+			conn = dbConnection.getConnection();
+			stmt = null;
+		} catch (SQLException e) {
+			System.err.println("Error: " + e);
+		}
 		
 		this.user.setText(AdminController.selectedUser.getUser());
 		this.pass.setText(AdminController.selectedUser.getPass());
@@ -48,17 +54,15 @@ public class EditUserController implements Initializable {
 	
 	@FXML
 	private void saveEntry(ActionEvent event) throws SQLException {
-		Connection conn = dbConnection.getConnection();
 		if (checkNull()) {
-			PreparedStatement stmt = conn.prepareStatement(AdminController.sqlUpdateUsers);
+			stmt = conn.prepareStatement(AdminController.sqlUpdateUsers);
 			stmt.setString(1, this.user.getText());
 			stmt.setString(2, this.pass.getText());
 			stmt.setString(3, this.department.getText());
-			stmt.setString(4, this.id.getText());
+			stmt.setString(4, AdminController.selectedUser.getDepartment());
+			stmt.setString(5, this.id.getText());
 			stmt.execute();
-			conn.close();
 		} else {
-			conn.close();
 			System.out.println("Null values. Cannot save entry.");
 			return;
 		}
