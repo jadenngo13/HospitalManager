@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import data.PatientData;
+import data.UserData;
 import data.DoctorData;
 
 public class AdminController implements Initializable {
@@ -121,22 +122,43 @@ public class AdminController implements Initializable {
 	private TableColumn<DoctorData, String> departmentColumn;
 	@FXML
 	private TableColumn<DoctorData, String> patientsColumn;
-	
-	
-	/***** Doctors  Tab *****/
-	private dbConnection dc;
+
+	/***** Admin  Tab *****/
+	@FXML
+	private TableView<UserData> adminTable;
+	@FXML
+	private TableColumn<UserData, String> userColumn;
+	@FXML
+	private TableColumn<UserData, String> passColumn;
+	@FXML
+	private TableColumn<UserData, String> departmentColumn2;
+	@FXML
+	private TableColumn<UserData, String> idColumn4;
+
+	/***** Variables *****/
 	private ObservableList<PatientData> patientData;
 	private ObservableList<DoctorData> doctorData;
+	private ObservableList<UserData> userData;
+	
+	private ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
+	private ArrayList<DoctorData> doctorsToDel = new ArrayList<DoctorData>();
+	private ArrayList<UserData> usersToDel = new ArrayList<UserData>();
+	
+	public static PatientData selectedPatient;
+	public static DoctorData selectedDoctor;
+	public static UserData selectedUser;
 	
 	private String adminTab = "Patients";
 	
 	public static String sqlLoadPatients = "SELECT * FROM patients";
 	public static String sqlLoadDoctors = "SELECT * FROM doctors";
+	public static String sqlLoadUsers = "SELECT * FROM login";
 	public static String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info, doctor) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	public static String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	public static String sqlDelPatients = "DELETE FROM patients WHERE id=?";
 	public static String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
 	public static String sqlUpdatePatients = "UPDATE patients SET doctor=? WHERE id=?";
+	public static String sqlUpdateUsers = "UPDATE login SET username=?, password=?, department=? WHERE id=?";
 	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdatePatientsDoctor = "UPDATE doctors SET patients=? WHERE id=?";
 	public static String sqlGetDoctorPatients = "SELECT patients FROM doctors WHERE id=?";
@@ -146,14 +168,7 @@ public class AdminController implements Initializable {
 	public static String sqlSave = "UPDATE doctors SET id=?, first_name=?, last_name=?, gender=?, email=?, birthday=?, department=?, patients=? WHERE id=?";
 	public static String sqlCreateLogin = "INSERT INTO login(username, password, department, id) VALUES(?, ?, ?, ?)";
 	
-	private ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
-	private ArrayList<DoctorData> doctorsToDel = new ArrayList<DoctorData>();
-	
-	public static PatientData selectedPatient;
-	public static DoctorData selectedDoctor;
-	
 	public void initialize(URL url, ResourceBundle rb) {
-		this.dc = new dbConnection();
 		Connection conn;
 		ResultSet rs;
 		
@@ -172,6 +187,12 @@ public class AdminController implements Initializable {
 			rs = conn.createStatement().executeQuery(sqlLoadDoctors);
 			while (rs.next()) {
 				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+			}
+			
+			this.userData = FXCollections.observableArrayList();
+			rs = conn.createStatement().executeQuery(sqlLoadUsers);
+			while (rs.next()) {
+				this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -192,6 +213,14 @@ public class AdminController implements Initializable {
 	}
 	
 	@FXML
+	private void adminTab(Event event) throws SQLException {
+		adminTab = "Admin";
+		selectedPatient = null;
+		selectedDoctor = null;
+		patientsToDel.clear();
+		doctorsToDel.clear();
+	}
+	@FXML
 	private void refreshData(ActionEvent event) throws SQLException {
 		Connection conn = null;
 		ResultSet rs = null;
@@ -204,14 +233,21 @@ public class AdminController implements Initializable {
 				while (rs.next()) {
 					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
 				}
-			}
-		
-			if (adminTab.equals("Doctors")) {
+			} else if (adminTab.equals("Doctors")) {
 				this.doctorData = FXCollections.observableArrayList();
 				rs = conn.createStatement().executeQuery(sqlLoadDoctors);
 				while (rs.next()) {
 					this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 				}
+			} else if (adminTab.equals("Admin")) {
+				this.userData = FXCollections.observableArrayList();
+				rs = conn.createStatement().executeQuery(sqlLoadUsers);
+				while (rs.next()) {
+					this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+				}
+			} else {
+				System.out.println("No tab is selected for refresh data.");
+				return;
 			}
 			
 		} catch (SQLException e) {
@@ -248,6 +284,13 @@ public class AdminController implements Initializable {
 			this.patientsColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("patients"));
 			this.doctorTable.setItems(null);
 			this.doctorTable.setItems(doctorData);
+		} else if (adminTab.equals("Admin")) {
+			this.userColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("user"));
+			this.passColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("pass"));
+			this.departmentColumn2.setCellValueFactory(new PropertyValueFactory<UserData, String>("department"));
+			this.idColumn4.setCellValueFactory(new PropertyValueFactory<UserData, String>("ID"));
+			this.adminTable.setItems(null);
+			this.adminTable.setItems(userData);
 		}
 		conn.close();
 	}
@@ -280,10 +323,10 @@ public class AdminController implements Initializable {
 				    stmt.setString(1, patient.getID());
 				    stmt.execute();
 				  
-				    patientsToDel.clear();
 					stmt.close();
 					conn.close();
 				}
+				patientsToDel.clear();
 			} catch (SQLException e) {
 				System.err.println("Error: " + e);
 			}
@@ -301,14 +344,14 @@ public class AdminController implements Initializable {
 				    stmt.setString(1, "-1");
 				    stmt.setString(2, doctor.getID());
 				    stmt.execute();
-				    
-				    doctorsToDel.clear();
+				  
 					stmt.close();
 					conn.close();
 				} catch (SQLException e) {
 					System.err.println("Error: " + e);
 				}
 			}
+			doctorsToDel.clear();
 		} else {
 			return;
 		}
@@ -456,20 +499,30 @@ public class AdminController implements Initializable {
 			Pane editRoot = null;
 			if (adminTab.equals("Patients")) {
 				selectedPatient = patientTable.getSelectionModel().getSelectedItem();
-				editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editFXML.fxml").openStream());
+				if (selectedPatient != null)
+					editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editFXML.fxml").openStream());
 			} else if (adminTab.equals("Doctors")){
 				selectedDoctor = doctorTable.getSelectionModel().getSelectedItem();
-				editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editDoctorFXML.fxml").openStream());
+				if (selectedDoctor != null)
+					editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editDoctorFXML.fxml").openStream());
+			} else if (adminTab.equals("Admin")) {
+				selectedUser = adminTable.getSelectionModel().getSelectedItem();
+				if (selectedUser != null)
+					editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editUserFXML.fxml").openStream());
 			} else {
 				System.out.println("No entry selected for edit.");
 				return;
 			}
 			
-			Scene editScene = new Scene(editRoot);
-			editStage.setScene(editScene);
-			editStage.setTitle("Edit Menu");
-			editStage.setResizable(false);
-			editStage.show();
+			if (editRoot != null) {
+				Scene editScene = new Scene(editRoot);
+				editStage.setScene(editScene);
+				editStage.setTitle("Edit Menu");
+				editStage.setResizable(false);
+				editStage.show();
+			} else {
+				System.out.println("Edit root null. Cannot edit since no entry given.");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -507,7 +560,7 @@ public class AdminController implements Initializable {
 				stmt = conn.prepareStatement(sqlCreateLogin);
 				stmt.setString(1, name);
 				stmt.setString(2, generateRandomString(7));
-				stmt.setString(3, "Patient");
+				stmt.setString(3, "Doctor");
 				stmt.setString(4, id);
 				stmt.execute();
 			} else {

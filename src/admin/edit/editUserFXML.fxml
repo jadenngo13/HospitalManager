@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="395.0" prefWidth="403.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="admin.edit.EditUserController">
+   <children>
+      <AnchorPane layoutX="2.0" layoutY="-17.0" prefHeight="412.0" prefWidth="404.0">
+         <children>
+            <VBox layoutX="163.0" layoutY="83.0" prefHeight="212.0" prefWidth="239.0">
+               <children>
+                  <TextField fx:id="user" prefHeight="27.0" prefWidth="77.0" promptText="Username">
+                     <VBox.margin>
+                        <Insets right="100.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="pass" promptText="Password">
+                     <VBox.margin>
+                        <Insets right="100.0" top="20.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="department" promptText="Department">
+                     <VBox.margin>
+                        <Insets right="80.0" top="20.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TextField fx:id="id" editable="false" prefHeight="27.0" prefWidth="232.0" promptText="ID">
+                     <VBox.margin>
+                        <Insets right="210.0" top="20.0" />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox layoutX="28.0" layoutY="83.0" prefHeight="329.0" prefWidth="134.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="Username">
+                     <VBox.margin>
+                        <Insets left="30.0" top="10.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="Password">
+                     <VBox.margin>
+                        <Insets left="30.0" top="30.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="105.0" text="Department">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="30.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="70.0" text="ID">
+                     <VBox.margin>
+                        <Insets left="30.0" top="30.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+            <Label layoutX="28.0" layoutY="42.0" text="Edit User Profile Information">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Button layoutX="102.0" layoutY="295.0" mnemonicParsing="false" onAction="#clearEntry" prefHeight="27.0" prefWidth="213.0" text="Clear" />
+            <Button layoutX="102.0" layoutY="331.0" mnemonicParsing="false" onAction="#saveEntry" prefHeight="27.0" prefWidth="213.0" text="Save" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
