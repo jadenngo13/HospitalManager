@@ -2,13 +2,11 @@ package admin.view;
 
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import admin.AdminController;
-import data.DoctorData;
 import data.PatientData;
 import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
@@ -18,10 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import loginapp.LoginModel;
 
 public class ViewDoctorController implements Initializable {
 	

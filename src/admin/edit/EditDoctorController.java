@@ -1,6 +1,5 @@
 package admin.edit;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,16 +17,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 public class EditDoctorController implements Initializable {
 
@@ -190,7 +185,6 @@ public class EditDoctorController implements Initializable {
 			
 			// Update patients to be removed
 			stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);
-			StringBuilder newDoc = null;
 			for (PatientData patient : patientData) {
 				if ((!patient.getSelect().isSelected()) && patient.getDoctor().equals(AdminController.selectedDoctor.getID())) {
 					stmt.setString(1, "-1");

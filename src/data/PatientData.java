@@ -1,8 +1,7 @@
 package data;
 
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.CheckBox;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class PatientData {

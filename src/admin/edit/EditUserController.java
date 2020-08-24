@@ -7,9 +7,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import admin.AdminController;
-import data.UserData;
 import dbUtil.dbConnection;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
