@@ -58,6 +58,7 @@ public class EditDoctorController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> appDateColumn;
 	
+	private ResultSet rs;
 	private PreparedStatement stmt;
 	private Connection conn;
 	
@@ -70,7 +71,7 @@ public class EditDoctorController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		try {
 			conn = dbConnection.getConnection();
-			ResultSet rs = null;
+			rs = null;
 			
 
 			this.patientData = FXCollections.observableArrayList();
@@ -139,7 +140,6 @@ public class EditDoctorController implements Initializable {
 		boolean entryNotNull = checkNull();
 		if (entryNotNull) {
 			stmt = conn.prepareStatement(AdminController.sqlSave);
-			ResultSet rs = null;
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
 			stmt.setString(1, this.id.getText());

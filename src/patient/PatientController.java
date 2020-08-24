@@ -61,13 +61,15 @@ public class PatientController implements Initializable {
 	private ObservableList<DoctorData> doctorData;
 	private PatientData user;
 	
+	private ResultSet rs;
 	private PreparedStatement stmt;
 	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
+		rs = null;
+		stmt = null;
 		try {
 			conn = dbConnection.getConnection();
-			ResultSet rs = null;
 			
 			stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
 			stmt.setString(1, LoginModel.patID);
@@ -86,7 +88,6 @@ public class PatientController implements Initializable {
 				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 			}
 			
-			rs.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}

@@ -142,7 +142,6 @@ public class AdminController implements Initializable {
 	
 	private ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	private ArrayList<DoctorData> doctorsToDel = new ArrayList<DoctorData>();
-	private ArrayList<UserData> usersToDel = new ArrayList<UserData>();
 	
 	public static PatientData selectedPatient;
 	public static DoctorData selectedDoctor;
@@ -150,6 +149,7 @@ public class AdminController implements Initializable {
 	
 	private String adminTab = "Patients";
 	
+	private ResultSet rs;
 	private PreparedStatement stmt;
 	private Connection conn;
 	
@@ -174,7 +174,7 @@ public class AdminController implements Initializable {
 	public static String sqlCreateLogin = "INSERT INTO login(username, password, department, id) VALUES(?, ?, ?, ?)";
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		ResultSet rs;
+		rs = null;
 		stmt = null;
 		
 		try {
@@ -227,7 +227,6 @@ public class AdminController implements Initializable {
 	}
 	@FXML
 	private void refreshData(ActionEvent event) throws SQLException {
-		ResultSet rs = null;
 		try {
 			
 			if (adminTab.equals("Patients")) {

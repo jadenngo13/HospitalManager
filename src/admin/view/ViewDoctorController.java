@@ -56,16 +56,16 @@ public class ViewDoctorController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> infoColumn;
 	
+	private ResultSet rs;
 	private Connection conn;
 	
 	private ObservableList<PatientData> patientData;
 	
 	public void initialize(URL url, ResourceBundle rb) {
+		rs = null;
 		try {
 			conn = dbConnection.getConnection();
-			ResultSet rs = null;
 			
-
 			this.patientData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			

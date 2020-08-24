@@ -54,15 +54,15 @@ public class DoctorController implements Initializable {
 	
 	private DoctorData user;
 	
+	private ResultSet rs;
 	private PreparedStatement stmt;
-	
 	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		ResultSet rs = null;
+		rs = null;
+		stmt = null;
 		try {
 			conn = dbConnection.getConnection();
-			rs = null;
 			stmt = conn.prepareStatement(AdminController.sqlGetDoctorFromID);
 			stmt.setString(1, LoginModel.docID);
 			
@@ -70,7 +70,6 @@ public class DoctorController implements Initializable {
 			if (rs.next()) {
 				this.user = new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8));
 			}
-			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -130,7 +129,7 @@ public class DoctorController implements Initializable {
 			// Clear patients to be deleted array
 			patientsToDel.clear();
 			
-			ResultSet rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
+			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
@@ -138,7 +137,6 @@ public class DoctorController implements Initializable {
 					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
 				}
 			}
-			rs.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
