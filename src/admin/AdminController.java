@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import data.PatientData;
 import data.DoctorData;
@@ -139,7 +140,11 @@ public class AdminController implements Initializable {
 	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdatePatientsDoctor = "UPDATE doctors SET patients=? WHERE id=?";
 	public static String sqlGetDoctorPatients = "SELECT patients FROM doctors WHERE id=?";
+	public static String sqlGetPatientsDoctor = "SELECT * FROM doctors WHERE id=?";
+	public static String sqlGetPatientFromID = "SELECT * FROM patients WHERE id=?";
+	public static String sqlGetDoctorFromID = "SELECT * FROM doctors WHERE id=?";
 	public static String sqlSave = "UPDATE doctors SET id=?, first_name=?, last_name=?, gender=?, email=?, birthday=?, department=?, patients=? WHERE id=?";
+	public static String sqlCreateLogin = "INSERT INTO login(username, password, department, id) VALUES(?, ?, ?, ?)";
 	
 	private ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	private ArrayList<DoctorData> doctorsToDel = new ArrayList<DoctorData>();
@@ -149,6 +154,28 @@ public class AdminController implements Initializable {
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
+		Connection conn;
+		ResultSet rs;
+		
+		try {
+			conn = dbConnection.getConnection();
+			
+			// Load patients
+			this.patientData = FXCollections.observableArrayList();
+			rs = conn.createStatement().executeQuery(sqlLoadPatients);
+			while (rs.next()) {
+				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+			}
+				
+			// Load doctors
+			this.doctorData = FXCollections.observableArrayList();
+			rs = conn.createStatement().executeQuery(sqlLoadDoctors);
+			while (rs.next()) {
+				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -170,12 +197,13 @@ public class AdminController implements Initializable {
 		ResultSet rs = null;
 		try {
 			conn = dbConnection.getConnection();
-			rs = conn.createStatement().executeQuery(sqlLoadPatients);
 			
-			this.patientData = FXCollections.observableArrayList();
-			rs = conn.createStatement().executeQuery(sqlLoadPatients);
-			while (rs.next()) {
-				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+			if (adminTab.equals("Patients")) {
+				this.patientData = FXCollections.observableArrayList();
+				rs = conn.createStatement().executeQuery(sqlLoadPatients);
+				while (rs.next()) {
+					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+				}
 			}
 		
 			if (adminTab.equals("Doctors")) {
@@ -229,8 +257,8 @@ public class AdminController implements Initializable {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		if (adminTab.equals("Patients")) {
-			for (PatientData patient : patientsToDel) {
-				try {
+			try {
+				for (PatientData patient : patientsToDel) {
 					conn = dbConnection.getConnection();
 					
 					// Unassign patient from assigned doctor
@@ -250,13 +278,14 @@ public class AdminController implements Initializable {
 				    
 					stmt = conn.prepareStatement(sqlDelPatients);
 				    stmt.setString(1, patient.getID());
-				    stmt.executeUpdate();
+				    stmt.execute();
 				  
-				    
+				    patientsToDel.clear();
 					stmt.close();
-				} catch (SQLException e) {
-					System.err.println("Error: " + e);
+					conn.close();
 				}
+			} catch (SQLException e) {
+				System.err.println("Error: " + e);
 			}
 		} else if (adminTab.equals("Doctors")){
 			for (DoctorData doctor : doctorsToDel) {
@@ -269,11 +298,13 @@ public class AdminController implements Initializable {
 				    
 				    // Unassign doctor from all assigned patients
 				    stmt = conn.prepareStatement(sqlUpdateDoctorsPatient);
-				    stmt.setString(1, "0");
+				    stmt.setString(1, "-1");
 				    stmt.setString(2, doctor.getID());
 				    stmt.execute();
 				    
+				    doctorsToDel.clear();
 					stmt.close();
+					conn.close();
 				} catch (SQLException e) {
 					System.err.println("Error: " + e);
 				}
@@ -281,7 +312,6 @@ public class AdminController implements Initializable {
 		} else {
 			return;
 		}
-		conn.close();
 	}
 
 	@FXML
@@ -309,6 +339,7 @@ public class AdminController implements Initializable {
 				stmt.setString(8, this.info.getText());
 				stmt.setString(9, "-1");
 				stmt.execute();
+				createUser(conn, this.id.getText(), this.firstName.getText());
 			} else if (adminTab.equals("Doctors")) { // SQL query inserts that differ for doctors
 				stmt = conn.prepareStatement(sqlInsertDoctor);
 				stmt.setString(1, this.id2.getText());
@@ -339,6 +370,7 @@ public class AdminController implements Initializable {
 					stmt.setString(2, id);
 					stmt.execute();
 				}
+				createUser(conn, this.id2.getText(), this.firstName2.getText());
 			} else {
 				System.out.println("No entry selected for add.");
 				return;
@@ -461,18 +493,52 @@ public class AdminController implements Initializable {
 		}
 	}
 	
+	private void createUser(Connection conn, String id, String name) {
+		PreparedStatement stmt;
+		try {
+			if (adminTab.equals("Patients")) {
+				stmt = conn.prepareStatement(sqlCreateLogin);
+				stmt.setString(1, name);
+				stmt.setString(2, generateRandomString(7));
+				stmt.setString(3, "Patient");
+				stmt.setString(4, id);
+				stmt.execute();
+			} else if (adminTab.equals("Doctors")) {
+				stmt = conn.prepareStatement(sqlCreateLogin);
+				stmt.setString(1, name);
+				stmt.setString(2, generateRandomString(7));
+				stmt.setString(3, "Patient");
+				stmt.setString(4, id);
+				stmt.execute();
+			} else {
+				System.out.println("No tab selected to allow creating of user");
+				return;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	public static final LocalDate LOCAL_DATE (String dateString){
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 	    LocalDate localDate = LocalDate.parse(dateString, formatter);
 	    return localDate;
 	}
+	
+	public String generateRandomString(int length) {
+	    int leftLimit = 97; // Letter 'a'
+	    int rightLimit = 122; // Letter 'z'
+	    int len = length;
+	    Random random = new Random();
+	 
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	      .limit(len)
+	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	      .toString();
+	 
+	    System.out.println(generatedString);
+	    return generatedString;
+	}
 }
-
-
-
-
-//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-//LocalDate bday = LocalDate.parse(this.birthday.getPromptText()); 
-// LocalDate aday = LocalDate.parse("2018-11-27"); 
 
 

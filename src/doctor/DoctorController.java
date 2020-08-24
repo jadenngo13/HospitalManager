@@ -53,16 +53,40 @@ public class DoctorController implements Initializable {
 	private ObservableList<PatientData> patientData;
 	private ObservableList<DoctorData> doctorData;
 	
+	private PatientData selectedPatient;
+	private DoctorData selectedDoctor;
+	
+	private DoctorData user;
+	
 	private dbConnection dc;
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		this.dc = new dbConnection();
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = dbConnection.getConnection();
+			rs = null;
+			stmt = conn.prepareStatement(AdminController.sqlGetDoctorFromID);
+			stmt.setString(1, LoginModel.docID);
+			
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				this.user = new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8));
+			}
+			conn.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML 
 	private void viewPatient(ActionEvent event) throws SQLException {
-		AdminController.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
-		if (AdminController.selectedPatient != null) {
+		this.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
+		if (this.selectedPatient != null) {
 			try {
 				Stage viewStage = new Stage();
 				FXMLLoader viewLoader = new FXMLLoader();
@@ -81,8 +105,8 @@ public class DoctorController implements Initializable {
 	
 	@FXML
 	private void editPatient(ActionEvent event) throws SQLException {
-		AdminController.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
-		if (AdminController.selectedPatient != null) {
+		this.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
+		if (this.selectedPatient != null) {
 			try {
 				Stage editStage = new Stage();
 				FXMLLoader editLoader = new FXMLLoader();
@@ -101,28 +125,29 @@ public class DoctorController implements Initializable {
 
 	@FXML
 	private void deletePatient(ActionEvent event) throws SQLException {
-		AdminController.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
-		patientsToDel.add(AdminController.selectedPatient);
-	    doctorTable.getItems().remove(AdminController.selectedPatient);
-	    AdminController.selectedPatient = null;
+		this.selectedPatient = doctorTable.getSelectionModel().getSelectedItem();
+		patientsToDel.add(this.selectedPatient);
+	    doctorTable.getItems().remove(this.selectedPatient);
+	    this.selectedPatient = null;
 	}
 	
 	@FXML
 	private void refreshPatientData(ActionEvent event) throws SQLException {
 		try {
+			// Clear patients to be deleted array
+			patientsToDel.clear();
+			
 			Connection conn = dbConnection.getConnection();
 			ResultSet rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
-				String[] docsPatsArr = rs.getString(9).split(",");
-				for (String patID : docsPatsArr) {
-					if (patID.equals(LoginModel.docID)) {
-						this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
-					}
+				if (rs.getString(9).equals(LoginModel.docID)) {
+					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
 				}
 			}
-			
+			rs.close();
+			conn.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
@@ -144,50 +169,30 @@ public class DoctorController implements Initializable {
 		try {
 			Connection conn = dbConnection.getConnection();
 			PreparedStatement stmt = null;
-			ResultSet rs = null;
 			
 			for (PatientData patient : patientsToDel) {
+				
 				// Update doctor
-				String[] patients = null;
 				StringBuilder newPats = new StringBuilder();
-				rs = conn.createStatement().executeQuery(AdminController.sqlGetDoctorPatients);
-				if (rs.next()) {
-					patients = rs.getString(1).split(",");
-					for (String patID : patients) {
-						if (!patID.equals(patient.getID())) {
-							newPats.append(patID);
-						}
+				String[] docsPats = user.getPatients().split(",");
+				for (String patID : docsPats) {
+					if (!patID.equals(patient.getID())) {
+						newPats.append(patID + ",");
 					}
 				}
 				stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
 				stmt.setString(1, newPats.toString());
 				stmt.setString(2, LoginModel.docID);
+				stmt.execute();
 				
 				// Update the patient
-				rs = conn.createStatement().executeQuery(AdminController.sqlUpdateDoctorsPatient);
-				String[] doctors = null; 
-				StringBuilder newDocs = new StringBuilder();
-				if (rs.next()) {
-					doctors = rs.getString(1).split(",");
-					for (String patID : patients) {
-						if (!patID.equals(patient.getID())) {
-							newPats.append(patID);
-						}
-					}
-				}
-				
-				stmt.setString(1, null);
-				stmt.setString(2, LoginModel.docID);
+				stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);
+				stmt.setString(1, "-1");
+				stmt.setString(2, patient.getID());
 				stmt.execute();
-			
-				// Delete the patient
-				stmt = conn.prepareStatement(AdminController.sqlDelPatients);
-				stmt.setString(1, patient.getID());
-			    stmt.execute();
 			}
 				
 			stmt.close();
-			rs.close();
 		    conn.close();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);

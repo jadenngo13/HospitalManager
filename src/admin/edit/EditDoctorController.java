@@ -195,7 +195,7 @@ public class EditDoctorController implements Initializable {
 			StringBuilder newDoc = null;
 			for (PatientData patient : patientData) {
 				if ((!patient.getSelect().isSelected()) && patient.getDoctor().equals(AdminController.selectedDoctor.getID())) {
-					stmt.setString(1, "0");
+					stmt.setString(1, "-1");
 					stmt.setString(2, patient.getID());
 					stmt.execute();
 				}
