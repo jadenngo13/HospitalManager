@@ -182,7 +182,7 @@ public class DoctorController implements Initializable {
 				stmt.execute();
 				
 				// Update the patient
-				stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);
+				stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient1);
 				stmt.setString(1, "-1");
 				stmt.setString(2, patient.getID());
 				stmt.execute();

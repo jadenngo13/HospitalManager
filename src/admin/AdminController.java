@@ -161,6 +161,7 @@ public class AdminController implements Initializable {
 	public static String sqlUpdatePatients = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdateUsers = "UPDATE login SET username=?, password=?, department=? WHERE id=?";
 	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE doctor=?";
+	public static String sqlUpdateDoctorsPatient1 = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdatePatientsDoctor = "UPDATE doctors SET patients=? WHERE id=?";
 	public static String sqlGetDoctorPatients = "SELECT patients FROM doctors WHERE id=?";
 	public static String sqlGetPatientsDoctor = "SELECT * FROM doctors WHERE id=?";
@@ -327,7 +328,7 @@ public class AdminController implements Initializable {
 				    stmt = conn.prepareStatement(sqlDelUsers);
 				    stmt.setString(1, patient.getID());
 				    stmt.execute();
-				  
+				    
 					stmt.close();
 					conn.close();
 				}
