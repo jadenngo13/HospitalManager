@@ -2,8 +2,10 @@ package loginapp;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ResourceBundle;
 
+import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +37,8 @@ public class LoginController implements Initializable {
 	private Button loginButton;
 	@FXML 
 	private Label loginStatus;
+	
+	public static Connection conn;
 	
 	
 	public void initialize(URL url, ResourceBundle rb) {

@@ -16,7 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
+import loginapp.LoginController;
+import loginapp.LoginModel;
 import admin.AdminController;
 
 public class EditController implements Initializable {
@@ -50,11 +51,7 @@ public class EditController implements Initializable {
 	private String sqlSave = "UPDATE patients SET id = ?, first_name = ?, last_name = ?, gender = ?, email = ?, birthday = ?, appointment_date = ?, info = ? WHERE id = ?";
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		try {
-			conn = dbConnection.getConnection();
-		} catch (SQLException e) {
-			System.out.println("Error: " + e);
-		}
+		conn = LoginModel.conn;
 		
 		this.birthday.setPromptText("Birthday");
 		this.appDate.setPromptText("App. Date");

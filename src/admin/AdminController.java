@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -27,6 +28,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import loginapp.LoginController;
+import loginapp.LoginModel;
 import javafx.scene.control.TableColumn;
 
 import java.util.ArrayList;
@@ -131,6 +134,9 @@ public class AdminController implements Initializable {
 	private TableColumn<UserData, String> departmentColumn2;
 	@FXML
 	private TableColumn<UserData, String> idColumn4;
+	
+	@FXML
+	private Button logoutButton;
 
 	/***** Variables *****/
 	private ObservableList<PatientData> patientData;
@@ -175,7 +181,7 @@ public class AdminController implements Initializable {
 		stmt = null;
 		
 		try {
-			conn = dbConnection.getConnection();
+			conn = dbConnection.conn;
 			
 			// Load patients
 			this.patientData = FXCollections.observableArrayList();
@@ -248,6 +254,8 @@ public class AdminController implements Initializable {
 				System.out.println("No tab is selected for refresh data.");
 				return;
 			}
+			patientsToDel.clear();
+			doctorsToDel.clear();
 			
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
@@ -537,6 +545,31 @@ public class AdminController implements Initializable {
 			System.out.println("No entry selected for deletion.");
 			return;
 		}
+	}
+	
+	@FXML
+	private void logout(ActionEvent event) throws SQLException {
+		// Closeout current window
+		Stage stage = (Stage) logoutButton.getScene().getWindow();
+		stage.close();
+		
+		// Reload login window
+		FXMLLoader loader = new FXMLLoader();
+		stage = new Stage();
+		Pane root = null;
+		try {
+			root = (Pane)loader.load(getClass().getResource("/loginapp/login.fxml").openStream());
+			if (root != null) {
+				Scene editScene = new Scene(root);
+				stage.setScene(editScene);
+				stage.setTitle("Login Menu");
+				stage.setResizable(false);
+				stage.show();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 	
 	private void createUser(String id, String name) {

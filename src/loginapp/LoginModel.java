@@ -15,22 +15,25 @@ public class LoginModel {
 	private String sqlQuery = "SELECT * FROM login WHERE username=? and password=? and department=?";
 	private String sqlGetUserID = "SELECT id FROM login WHERE username=? and password=? and department=?";
 	
-	Connection connection;
+	public static Connection conn;
 	
 	public LoginModel() {
 		try {
-			this.connection = dbConnection.getConnection();
+			if (dbConnection.conn == null) {
+				dbConnection.conn = dbConnection.getConnection();
+			}
+			conn = dbConnection.conn;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		if (this.connection == null) {
+		if (conn == null) {
 			System.exit(1); 
 		}
 	}
 	
 	public boolean isDBConnected() {
-		return this.connection != null;
+		return conn != null;
 	}
 	
 	public boolean isLogin(String user, String pass, String option) throws Exception {
@@ -38,7 +41,7 @@ public class LoginModel {
 		ResultSet rs = null;
 		
 		try {
-			statement = this.connection.prepareStatement(sqlQuery);
+			statement = conn.prepareStatement(sqlQuery);
 			statement.setString(1, user);
 			statement.setString(2, pass);
 			statement.setString(3, option);
@@ -49,7 +52,7 @@ public class LoginModel {
 				PreparedStatement stmt = null;
 				ResultSet res = null;
 				
-				stmt = this.connection.prepareStatement(sqlGetUserID);
+				stmt = conn.prepareStatement(sqlGetUserID);
 				
 				stmt.setString(1, user);
 				stmt.setString(2, pass);

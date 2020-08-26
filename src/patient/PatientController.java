@@ -1,5 +1,6 @@
 package patient;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,14 +14,21 @@ import data.PatientData;
 import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import loginapp.LoginController;
 import loginapp.LoginModel;
 
 public class PatientController implements Initializable {
@@ -55,6 +63,8 @@ public class PatientController implements Initializable {
 	private TableColumn<DoctorData, String> birthdayColumn;
 	@FXML
 	private TableColumn<DoctorData, String> departmentColumn;
+	@FXML
+	private Button logoutButton;
 	
 	private ObservableList<DoctorData> doctorData;
 	private PatientData user;
@@ -67,7 +77,8 @@ public class PatientController implements Initializable {
 		rs = null;
 		stmt = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dbConnection.conn;
+			
 			
 			stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
 			stmt.setString(1, LoginModel.patID);
@@ -107,5 +118,30 @@ public class PatientController implements Initializable {
 		this.departmentColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("department"));
 		this.doctorTable.setItems(null);
 		this.doctorTable.setItems(doctorData);
+	}
+	
+	@FXML
+	private void logout(ActionEvent event) throws SQLException {
+		// Closeout current window
+		Stage stage = (Stage) logoutButton.getScene().getWindow();
+		stage.close();
+		
+		// Reload login window
+		FXMLLoader loader = new FXMLLoader();
+		stage = new Stage();
+		Pane root = null;
+		try {
+			root = (Pane)loader.load(getClass().getResource("/loginapp/login.fxml").openStream());
+			if (root != null) {
+				Scene editScene = new Scene(root);
+				stage.setScene(editScene);
+				stage.setTitle("Login Menu");
+				stage.setResizable(false);
+				stage.show();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 }

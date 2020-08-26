@@ -127,6 +127,11 @@
                                     <Insets left="20.0" />
                                  </VBox.margin>
                               </Button>
+                              <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" text="Logout">
+                                 <VBox.margin>
+                                    <Insets left="20.0" top="165.0" />
+                                 </VBox.margin>
+                              </Button>
                            </children>
                         </VBox>
                      </children>
@@ -249,6 +254,11 @@
                                     <Insets left="20.0" />
                                  </VBox.margin>
                               </Button>
+                              <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" text="Logout">
+                                 <VBox.margin>
+                                    <Insets left="20.0" top="65.0" />
+                                 </VBox.margin>
+                              </Button>
                            </children>
                         </VBox>
                      </children>
@@ -276,6 +286,11 @@
                                     <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="201.0" text="Save">
                                        <VBox.margin>
                                           <Insets left="20.0" right="20.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" text="Logout">
+                                       <VBox.margin>
+                                          <Insets left="20.0" top="525.0" />
                                        </VBox.margin>
                                     </Button>
                                  </children>

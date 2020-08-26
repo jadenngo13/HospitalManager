@@ -13,6 +13,8 @@ import javafx.fxml.FXML;
 
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import loginapp.LoginController;
+import loginapp.LoginModel;
 
 public class EditUserController implements Initializable {
 
@@ -29,12 +31,8 @@ public class EditUserController implements Initializable {
 	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		try {
-			conn = dbConnection.getConnection();
-			stmt = null;
-		} catch (SQLException e) {
-			System.err.println("Error: " + e);
-		}
+		conn = LoginModel.conn;
+		stmt = null;
 		
 		this.user.setText(AdminController.selectedUser.getUser());
 		this.pass.setText(AdminController.selectedUser.getPass());

@@ -19,12 +19,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import dbUtil.dbConnection;
+import loginapp.LoginController;
 import loginapp.LoginModel;
 
 public class DoctorController implements Initializable {
@@ -47,6 +49,8 @@ public class DoctorController implements Initializable {
 	private TableColumn<PatientData, String> appDateColumn;
 	@FXML
 	private TableColumn<PatientData, String> infoColumn;
+	@FXML
+	private Button logoutButton;
 	
 	ArrayList<PatientData> patientsToDel = new ArrayList<PatientData>();
 	
@@ -62,7 +66,12 @@ public class DoctorController implements Initializable {
 		rs = null;
 		stmt = null;
 		try {
-			conn = dbConnection.getConnection();
+			if (LoginModel.conn != null) {
+				System.out.println("doc");
+				conn = LoginModel.conn;
+			}
+			
+			
 			stmt = conn.prepareStatement(AdminController.sqlGetDoctorFromID);
 			stmt.setString(1, LoginModel.docID);
 			
@@ -104,11 +113,13 @@ public class DoctorController implements Initializable {
 				FXMLLoader editLoader = new FXMLLoader();
 				Pane editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editFXML.fxml").openStream());
 				
-				Scene editScene = new Scene(editRoot);
-				editStage.setScene(editScene);
-				editStage.setTitle("Edit Menu");
-				editStage.setResizable(false);
-				editStage.show();
+				if (editRoot != null) {
+					Scene editScene = new Scene(editRoot);
+					editStage.setScene(editScene);
+					editStage.setTitle("Edit Menu");
+					editStage.setResizable(false);
+					editStage.show();
+				} 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -180,5 +191,30 @@ public class DoctorController implements Initializable {
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
+	}
+	
+	@FXML
+	private void logout(ActionEvent event) throws SQLException {
+		// Closeout current window
+		Stage stage = (Stage) logoutButton.getScene().getWindow();
+		stage.close();
+		
+		// Reload login window
+		FXMLLoader loader = new FXMLLoader();
+		stage = new Stage();
+		Pane root = null;
+		try {
+			root = (Pane)loader.load(getClass().getResource("/loginapp/login.fxml").openStream());
+			if (root != null) {
+				Scene editScene = new Scene(root);
+				stage.setScene(editScene);
+				stage.setTitle("Login Menu");
+				stage.setResizable(false);
+				stage.show();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 }
