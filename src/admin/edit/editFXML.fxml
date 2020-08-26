@@ -62,7 +62,7 @@
             </VBox>
             <VBox layoutX="206.0" layoutY="213.0" prefHeight="336.0" prefWidth="317.0">
                <children>
-                  <TextField fx:id="id" prefHeight="27.0" prefWidth="44.0" promptText="ID">
+                  <TextField fx:id="id" editable="false" prefHeight="27.0" prefWidth="44.0" promptText="ID">
                      <VBox.margin>
                         <Insets right="275.0" top="5.0" />
                      </VBox.margin>

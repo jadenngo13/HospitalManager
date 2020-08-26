@@ -50,7 +50,7 @@ public class PatientController implements Initializable {
 	@FXML
 	private TableView<DoctorData> doctorTable;
 	@FXML
-	private TableColumn<DoctorData, String> idColumn;
+	private TableColumn<DoctorData, Integer> idColumn;
 	@FXML
 	private TableColumn<DoctorData, String> fnColumn;
 	@FXML
@@ -81,27 +81,27 @@ public class PatientController implements Initializable {
 			
 			
 			stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
-			stmt.setString(1, LoginModel.patID);
+			stmt.setInt(1, LoginModel.patID);
 			
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				this.user = new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9));
+				this.user = new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9));
 			}
 			
 			stmt = conn.prepareStatement(AdminController.sqlGetPatientsDoctor);
-			stmt.setString(1, user.getDoctor());
+			stmt.setInt(1, user.getDoctor());
 			
 			this.doctorData = FXCollections.observableArrayList();
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+				this.doctorData.add(new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 			}
 			
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
 
-		this.id.setText(user.getID());
+		this.id.setText(Integer.toString(user.getID()));
 		this.name.setText(user.getFirstName() + user.getLastName());
 		this.gender.setText(user.getGender());
 		this.email.setText(user.getEmail());
@@ -109,7 +109,7 @@ public class PatientController implements Initializable {
 		this.appDate.setValue(AdminController.LOCAL_DATE(user.getBirthday()));
 		this.info.setText(user.getInfo());
 		
-		this.idColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("ID"));
+		this.idColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, Integer>("ID"));
 		this.fnColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("firstName"));
 		this.lnColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("lastName"));
 		this.genderColumn.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("gender"));

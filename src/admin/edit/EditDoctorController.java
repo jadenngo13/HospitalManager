@@ -47,7 +47,7 @@ public class EditDoctorController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> selectColumn;
 	@FXML
-	private TableColumn<PatientData, String> idColumn;
+	private TableColumn<PatientData, Integer> idColumn;
 	@FXML
 	private TableColumn<PatientData, String> fnColumn;
 	@FXML
@@ -75,10 +75,10 @@ public class EditDoctorController implements Initializable {
 			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
 			while (rs.next()) {
-				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+				this.patientData.add(new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9)));
 				String[] docsPatsArr = rs.getString(9).split(",");
 				for (String patID : docsPatsArr) {
-					if (patID.equals(AdminController.selectedDoctor.getID())) {
+					if (Integer.valueOf(patID) == AdminController.selectedDoctor.getID()) {
 						this.patientData.get(patientData.size()-1).getSelect().setSelected(true);
 					}
 				}
@@ -87,7 +87,7 @@ public class EditDoctorController implements Initializable {
 			this.doctorData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(AdminController.sqlLoadDoctors);
 			while (rs.next()) {
-				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+				this.doctorData.add(new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 			}
 			
 			this.selectedPatients = FXCollections.observableArrayList();
@@ -95,7 +95,7 @@ public class EditDoctorController implements Initializable {
 			System.err.println("Error: " + e);
 		}
 		
-		this.id.setText(AdminController.selectedDoctor.getID());
+		this.id.setText(Integer.toString(AdminController.selectedDoctor.getID()));
 		this.firstName.setText(AdminController.selectedDoctor.getFirstName());
 		this.lastName.setText(AdminController.selectedDoctor.getLastName());
 		this.gender.setText(AdminController.selectedDoctor.getGender());
@@ -104,7 +104,7 @@ public class EditDoctorController implements Initializable {
 		this.department.setText(AdminController.selectedDoctor.getDepartment());
 		
 		this.selectColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("select"));
-		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
+		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("ID"));
 		this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 		this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 		this.appDateColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("appDate"));
@@ -139,58 +139,57 @@ public class EditDoctorController implements Initializable {
 			stmt = conn.prepareStatement(AdminController.sqlSave);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
-			stmt.setString(1, this.id.getText());
-			stmt.setString(2, this.firstName.getText());
-			stmt.setString(3, this.lastName.getText());
-			stmt.setString(4, this.gender.getText());
-			stmt.setString(5, this.email.getText());
+			stmt.setString(1, this.firstName.getText());
+			stmt.setString(2, this.lastName.getText());
+			stmt.setString(3, this.gender.getText());
+			stmt.setString(4, this.email.getText());
 			LocalDate bday = this.birthday.getValue();
 			if (bday != null) {
-			    stmt.setString(6, formatter.format(bday));
+			    stmt.setString(5, formatter.format(bday));
 			}
-			stmt.setString(7, this.department.getText());
+			stmt.setString(6, this.department.getText());
 			StringBuilder selectedPats = new StringBuilder();
 			for (PatientData selPatient : selectedPatients) {
 				selectedPats.append(selPatient.getID() + ",");
 			}
 			System.out.println("selectedPats: " + selectedPats.toString());
-			stmt.setString(8, selectedPats.toString());
-			stmt.setString(9, AdminController.selectedDoctor.getID());
+			stmt.setString(7, selectedPats.toString());
+			stmt.setInt(8, AdminController.selectedDoctor.getID());
 			stmt.execute();
 			
 			// Update patients to be added
 			stmt = conn.prepareStatement(AdminController.sqlUpdatePatients);
 			for (PatientData selPatient : selectedPatients) {
-				stmt.setString(1, AdminController.selectedDoctor.getID());
-				stmt.setString(2, selPatient.getID());
+				stmt.setInt(1, AdminController.selectedDoctor.getID());
+				stmt.setInt(2, selPatient.getID());
 				stmt.execute();
 			}
 			
-			// Update other doctor who had newly assigned patient
+			/* Update other doctor who had newly assigned patient
 			stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
 			for (PatientData selPatient : selectedPatients) {
 				for (DoctorData doctor : doctorData) {
-					if (!doctor.getID().equals(AdminController.selectedDoctor.getID())) {
+					if (doctor.getID() == AdminController.selectedDoctor.getID()) {
 						String[] patsArr = doctor.getPatients().split(",");
 						StringBuilder newPats = new StringBuilder();
 						for (String patID : patsArr) {
-							if (!patID.equals(selPatient.getID())) {
+							if (Integer.valueOf(patID) == selPatient.getID()) {
 								newPats.append(patID + ",");
 							}
 						}
 						stmt.setString(1, newPats.toString()); //newPats
-						stmt.setString(2, doctor.getID());
+						stmt.setInt(2, doctor.getID());
 						stmt.execute();
 					}
 				}
-			}
+			} */
 			
 			// Update patients to be removed
 			stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);
 			for (PatientData patient : patientData) {
-				if ((!patient.getSelect().isSelected()) && patient.getDoctor().equals(AdminController.selectedDoctor.getID())) {
-					stmt.setString(1, "-1");
-					stmt.setString(2, patient.getID());
+				if ((!patient.getSelect().isSelected()) && (patient.getDoctor() == AdminController.selectedDoctor.getID())) {
+					stmt.setInt(1, -1);
+					stmt.setInt(2, patient.getID());
 					stmt.execute();
 				}
 			}
@@ -201,7 +200,7 @@ public class EditDoctorController implements Initializable {
 	
 	// Returns whether or not all fields have been filled out
 	private boolean checkNull() {
-		return ((this.id.getText()!=null) && (this.firstName.getText()!=null) && (this.lastName.getText()!=null)
+		return ((this.firstName.getText()!=null) && (this.lastName.getText()!=null)
 				&& (this.gender.getText()!=null) && (this.email.getText()!=null) && (this.birthday.getValue()!=null)
 				&& (this.department.getText()!=null));
 	}

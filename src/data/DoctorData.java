@@ -1,11 +1,13 @@
 package data;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class DoctorData {
 	
-	private StringProperty ID;
+	private IntegerProperty ID;
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private StringProperty gender;
@@ -14,8 +16,8 @@ public class DoctorData {
 	private StringProperty department;
 	private StringProperty patients;
 	
-	public DoctorData(String id, String firstName, String lastName, String gender, String email, String bday, String department, String patients) {
-		this.ID = new SimpleStringProperty(id);
+	public DoctorData(int id, String firstName, String lastName, String gender, String email, String bday, String department, String patients) {
+		this.ID = new SimpleIntegerProperty(id);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
 		this.gender = new SimpleStringProperty(gender);
@@ -25,7 +27,7 @@ public class DoctorData {
 		this.patients = new SimpleStringProperty(patients);
 	}
 	
-	public String getID() {
+	public int getID() {
 		return ID.get();
 	}
 
@@ -57,7 +59,7 @@ public class DoctorData {
 		return patients.get();
 	}
 
-	public void setID(String id) {
+	public void setID(int id) {
 		this.ID.set(id);
 	}
 
@@ -89,7 +91,7 @@ public class DoctorData {
 		this.patients.set(patients);
 	}
 	
-	public StringProperty idProperty() {
+	public IntegerProperty idProperty() {
 		return this.ID;
 	}
 	

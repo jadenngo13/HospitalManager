@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="395.0" prefWidth="403.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="admin.edit.EditUserController">
+<AnchorPane prefHeight="395.0" prefWidth="403.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="admin.edit.EditUserController">
    <children>
       <AnchorPane layoutX="2.0" layoutY="-17.0" prefHeight="412.0" prefWidth="404.0">
          <children>
@@ -25,7 +24,7 @@
                         <Insets right="100.0" top="20.0" />
                      </VBox.margin>
                   </TextField>
-                  <TextField fx:id="department" promptText="Department">
+                  <TextField fx:id="department" editable="false" promptText="Department">
                      <VBox.margin>
                         <Insets right="80.0" top="20.0" />
                      </VBox.margin>

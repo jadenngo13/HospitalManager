@@ -42,8 +42,6 @@ import data.DoctorData;
 public class AdminController implements Initializable {
 	
 	/***** Patients  Tab *****/
-	@FXML 
-	private TextField id;
 	@FXML
 	private TextField firstName;
 	@FXML
@@ -61,7 +59,7 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableView<PatientData> patientTable; // Main patient table
 	@FXML
-	private TableColumn<PatientData, String> idColumn;
+	private TableColumn<PatientData, Integer> idColumn;
 	@FXML
 	private TableColumn<PatientData, String> fnColumn;
 	@FXML
@@ -76,10 +74,10 @@ public class AdminController implements Initializable {
 	private TableColumn<PatientData, String> appDateColumn;
 	@FXML
 	private TableColumn<PatientData, String> infoColumn;
+	@FXML
+	private TableColumn<PatientData, Integer> docColumn;
 	
 	/***** Doctors  Tab *****/
-	@FXML 
-	private TextField id2;
 	@FXML
 	private TextField firstName2;
 	@FXML
@@ -97,7 +95,7 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableColumn<PatientData, String> selectColumn;
 	@FXML
-	private TableColumn<PatientData, String> idColumn3;
+	private TableColumn<PatientData, Integer> idColumn3;
 	@FXML
 	private TableColumn<PatientData, String> fnColumn3;
 	@FXML
@@ -107,7 +105,7 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableView<DoctorData> doctorTable; // Main doctor table
 	@FXML
-	private TableColumn<DoctorData, String> idColumn2;
+	private TableColumn<DoctorData, Integer> idColumn2;
 	@FXML
 	private TableColumn<DoctorData, String> fnColumn2;
 	@FXML
@@ -133,7 +131,7 @@ public class AdminController implements Initializable {
 	@FXML
 	private TableColumn<UserData, String> departmentColumn2;
 	@FXML
-	private TableColumn<UserData, String> idColumn4;
+	private TableColumn<UserData, Integer> idColumn4;
 	
 	@FXML
 	private Button logoutButton;
@@ -159,21 +157,23 @@ public class AdminController implements Initializable {
 	public static String sqlLoadPatients = "SELECT * FROM patients";
 	public static String sqlLoadDoctors = "SELECT * FROM doctors";
 	public static String sqlLoadUsers = "SELECT * FROM login";
-	public static String sqlInsertPatient = "INSERT INTO patients(id, first_name, last_name, gender, email, birthday, appointment_date, info, doctor) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	public static String sqlInsertDoctor = "INSERT INTO doctors(id, first_name, last_name, gender, email, birthday, department, patients) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+	public static String sqlInsertPatient = "INSERT INTO patients(first_name, last_name, gender, email, birthday, appointment_date, info, doctor) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+	public static String sqlInsertDoctor = "INSERT INTO doctors(first_name, last_name, gender, email, birthday, department, patients) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	public static String sqlDelPatients = "DELETE FROM patients WHERE id=?";
 	public static String sqlDelDoctors = "DELETE FROM doctors WHERE id=?";
 	public static String sqlDelUsers = "DELETE FROM login WHERE department=? AND id=?";
 	public static String sqlUpdatePatients = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdateUsers = "UPDATE login SET username=?, password=?, department=? WHERE department=? AND id=?";
-	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE doctor=?";
+	public static String sqlUpdateDoctorsPatient = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdateDoctorsPatient1 = "UPDATE patients SET doctor=? WHERE id=?";
 	public static String sqlUpdatePatientsDoctor = "UPDATE doctors SET patients=? WHERE id=?";
 	public static String sqlGetDoctorPatients = "SELECT patients FROM doctors WHERE id=?";
 	public static String sqlGetPatientsDoctor = "SELECT * FROM doctors WHERE id=?";
 	public static String sqlGetPatientFromID = "SELECT * FROM patients WHERE id=?";
 	public static String sqlGetDoctorFromID = "SELECT * FROM doctors WHERE id=?";
-	public static String sqlSave = "UPDATE doctors SET id=?, first_name=?, last_name=?, gender=?, email=?, birthday=?, department=?, patients=? WHERE id=?";
+	public static String sqlGetRecentPatient = "SELECT * FROM patients WHERE id = (SELECT MAX(id) FROM patients);";
+	public static String sqlGetRecentDoctor = "SELECT * FROM doctors WHERE id = (SELECT MAX(id) FROM doctors);";
+	public static String sqlSave = "UPDATE doctors SET first_name=?, last_name=?, gender=?, email=?, birthday=?, department=?, patients=? WHERE id=?";
 	public static String sqlCreateLogin = "INSERT INTO login(username, password, department, id) VALUES(?, ?, ?, ?)";
 	
 	public void initialize(URL url, ResourceBundle rb) {
@@ -187,20 +187,20 @@ public class AdminController implements Initializable {
 			this.patientData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(sqlLoadPatients);
 			while (rs.next()) {
-				this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+				this.patientData.add(new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9)));
 			}
 				
 			// Load doctors
 			this.doctorData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(sqlLoadDoctors);
 			while (rs.next()) {
-				this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+				this.doctorData.add(new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 			}
 			
 			this.userData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(sqlLoadUsers);
 			while (rs.next()) {
-				this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+				this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -236,19 +236,19 @@ public class AdminController implements Initializable {
 				this.patientData = FXCollections.observableArrayList();
 				rs = conn.createStatement().executeQuery(sqlLoadPatients);
 				while (rs.next()) {
-					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+					this.patientData.add(new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9)));
 				}
 			} else if (adminTab.equals("Doctors")) {
 				this.doctorData = FXCollections.observableArrayList();
 				rs = conn.createStatement().executeQuery(sqlLoadDoctors);
 				while (rs.next()) {
-					this.doctorData.add(new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
+					this.doctorData.add(new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 				}
 			} else if (adminTab.equals("Admin")) {
 				this.userData = FXCollections.observableArrayList();
 				rs = conn.createStatement().executeQuery(sqlLoadUsers);
 				while (rs.next()) {
-					this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)));
+					this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4)));
 				}
 			} else {
 				System.out.println("No tab is selected for refresh data.");
@@ -262,7 +262,7 @@ public class AdminController implements Initializable {
 		}
 		
 		if (adminTab.equals("Patients")) {
-			this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
+			this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("ID"));
 			this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 			this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
 			this.genderColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));
@@ -270,18 +270,19 @@ public class AdminController implements Initializable {
 			this.birthdayColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("birthday"));
 			this.appDateColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("appDate"));
 			this.infoColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("info"));
+			this.docColumn.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("doctor"));
 			this.patientTable.setItems(null);
 			this.patientTable.setItems(patientData);
 		} else if (adminTab.equals("Doctors")) {
 			this.selectColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("select"));
-			this.idColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
+			this.idColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("ID"));
 			this.fnColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 			this.lnColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
 			this.genderColumn3.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));
 			this.patientsTable1.setItems(null);
 			this.patientsTable1.setItems(patientData);
 			
-			this.idColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("ID"));
+			this.idColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, Integer>("ID"));
 			this.fnColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("firstName"));
 			this.lnColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("lastName"));
 			this.genderColumn2.setCellValueFactory(new PropertyValueFactory<DoctorData, String>("gender"));
@@ -295,7 +296,7 @@ public class AdminController implements Initializable {
 			this.userColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("user"));
 			this.passColumn.setCellValueFactory(new PropertyValueFactory<UserData, String>("pass"));
 			this.departmentColumn2.setCellValueFactory(new PropertyValueFactory<UserData, String>("department"));
-			this.idColumn4.setCellValueFactory(new PropertyValueFactory<UserData, String>("ID"));
+			this.idColumn4.setCellValueFactory(new PropertyValueFactory<UserData, Integer>("ID"));
 			this.adminTable.setItems(null);
 			this.adminTable.setItems(userData);
 		}
@@ -313,22 +314,22 @@ public class AdminController implements Initializable {
 						String[] patsArr = doctor.getPatients().split(",");
 						StringBuilder newPats = new StringBuilder();
 						for (String patID : patsArr) {
-							if (!patID.equals(patient.getID())) {
+							if (Integer.valueOf(patID) != patient.getID()) {
 								newPats.append(patID + ",");
 							}
 						}
 						stmt.setString(1, newPats.toString()); //newPats
-						stmt.setString(2, doctor.getID());
+						stmt.setInt(2, doctor.getID());
 						stmt.execute();
 					}
 				    
 					stmt = conn.prepareStatement(sqlDelPatients);
-				    stmt.setString(1, patient.getID());
+				    stmt.setInt(1, patient.getID());
 				    stmt.execute();
 				    
 				    stmt = conn.prepareStatement(sqlDelUsers);
 				    stmt.setString(1, "Patient");
-				    stmt.setString(2, patient.getID());
+				    stmt.setInt(2, patient.getID());
 				    stmt.execute();
 				}
 				patientsToDel.clear();
@@ -340,18 +341,18 @@ public class AdminController implements Initializable {
 				try {
 					
 					stmt = conn.prepareStatement(sqlDelDoctors);
-				    stmt.setString(1, doctor.getID());
+				    stmt.setInt(1, doctor.getID());
 				    stmt.execute();
 				    
 				    // Unassign doctor from all assigned patients
 				    stmt = conn.prepareStatement(sqlUpdateDoctorsPatient);
-				    stmt.setString(1, "-1");
-				    stmt.setString(2, doctor.getID());
+				    stmt.setInt(1, -1);
+				    stmt.setInt(2, doctor.getID());
 				    stmt.execute();
 				    
 				    stmt = conn.prepareStatement(sqlDelUsers);
 				    stmt.setString(1, "Doctor");
-				    stmt.setString(2, doctor.getID());
+				    stmt.setInt(2, doctor.getID());
 				    stmt.execute();
 				} catch (SQLException e) {
 					System.err.println("Error: " + e);
@@ -370,35 +371,39 @@ public class AdminController implements Initializable {
 			
 			if (adminTab.equals("Patients")) { //SQL query inserts that differ for patients
 				stmt = conn.prepareStatement(sqlInsertPatient);	
-				stmt.setString(1, this.id.getText());
-				stmt.setString(2, this.firstName.getText());
-				stmt.setString(3, this.lastName.getText());
-				stmt.setString(4, this.gender.getText());
-				stmt.setString(5, this.email.getText());
+				stmt.setString(1, this.firstName.getText());
+				stmt.setString(2, this.lastName.getText());
+				stmt.setString(3, this.gender.getText());
+				stmt.setString(4, this.email.getText());
 				LocalDate bday = this.birthday.getValue();
 				if (bday != null) {
-				    stmt.setString(6, formatter.format(bday));
+				    stmt.setString(5, formatter.format(bday));
 				}
 				LocalDate aday = this.appDate.getValue(); 
 				if (aday != null) {
-					stmt.setString(7, formatter.format(aday));
+					stmt.setString(6, formatter.format(aday));
 				}
-				stmt.setString(8, this.info.getText());
-				stmt.setString(9, "-1");
+				stmt.setString(7, this.info.getText());
+				stmt.setInt(8, -1);
 				stmt.execute();
-				createUser(this.id.getText(), this.firstName.getText());
+				
+				rs = conn.createStatement().executeQuery(sqlGetRecentPatient);
+				int newUserId = -1;
+				if (rs.next()) {
+					newUserId = rs.getInt(1);
+				}
+				createUser(newUserId, this.firstName.getText());
 			} else if (adminTab.equals("Doctors")) { // SQL query inserts that differ for doctors
 				stmt = conn.prepareStatement(sqlInsertDoctor);
-				stmt.setString(1, this.id2.getText());
-				stmt.setString(2, this.firstName2.getText());
-				stmt.setString(3, this.lastName2.getText());
-				stmt.setString(4, this.gender2.getText());
-				stmt.setString(5, this.email2.getText());
+				stmt.setString(1, this.firstName2.getText());
+				stmt.setString(2, this.lastName2.getText());
+				stmt.setString(3, this.gender2.getText());
+				stmt.setString(4, this.email2.getText());
 				LocalDate bday = this.birthday2.getValue();
 				if (bday != null) {
-				    stmt.setString(6, formatter.format(bday));
+				    stmt.setString(5, formatter.format(bday));
 				}
-				stmt.setString(7, this.department.getText());
+				stmt.setString(6, this.department.getText());
 				
 				StringBuilder pats = new StringBuilder();
 				for (PatientData patient : patientData) {
@@ -406,18 +411,25 @@ public class AdminController implements Initializable {
 						pats.append(patient.getID() + ",");
 					}
 				}
-				stmt.setString(8, pats.toString());
+				stmt.setString(7, pats.toString());
 				stmt.execute();
+				
+				rs = conn.createStatement().executeQuery(sqlGetRecentDoctor);
+				int newDocID = -1;
+				if (rs.next()) {
+					newDocID = rs.getInt(1);
+				}
 				
 				// Update patients
 				String[] patsArr = pats.toString().split(",");
 				for (String id : patsArr) {
 					stmt = conn.prepareStatement(sqlUpdatePatients);
-					stmt.setString(1, this.id2.getText());
+					stmt.setInt(1, newDocID);
 					stmt.setString(2, id);
 					stmt.execute();
 				}
-				createUser(this.id2.getText(), this.firstName2.getText());
+				
+				createUser(newDocID, this.firstName2.getText());
 			} else {
 				System.out.println("No entry selected for add.");
 				return;
@@ -430,7 +442,6 @@ public class AdminController implements Initializable {
 	@FXML
 	private void clearEntry(ActionEvent event) throws SQLException {
 		if (adminTab.equals("Patients")) {
-			this.id.setText(null);
 			this.firstName.setText(null);
 			this.lastName.setText(null);
 			this.gender.setText(null);
@@ -438,8 +449,7 @@ public class AdminController implements Initializable {
 			this.birthday.setValue(null);
 			this.appDate.setValue(null);
 			this.info.setText(null);
-		} else if (adminTab.equals("Doctors")){
-			this.id2.setText(null);
+		} else if (adminTab.equals("Doctors")) {
 			this.firstName2.setText(null);
 			this.lastName2.setText(null);
 			this.gender2.setText(null);
@@ -572,21 +582,21 @@ public class AdminController implements Initializable {
 	
 	}
 	
-	private void createUser(String id, String name) {
+	private void createUser(int id, String name) {
 		try {
 			if (adminTab.equals("Patients")) {
 				stmt = conn.prepareStatement(sqlCreateLogin);
 				stmt.setString(1, name);
 				stmt.setString(2, generateRandomString(7));
 				stmt.setString(3, "Patient");
-				stmt.setString(4, id);
+				stmt.setInt(4, id);
 				stmt.execute();
 			} else if (adminTab.equals("Doctors")) {
 				stmt = conn.prepareStatement(sqlCreateLogin);
 				stmt.setString(1, name);
 				stmt.setString(2, generateRandomString(7));
 				stmt.setString(3, "Doctor");
-				stmt.setString(4, id);
+				stmt.setInt(4, id);
 				stmt.execute();
 			} else {
 				System.out.println("No tab selected to allow creating of user");

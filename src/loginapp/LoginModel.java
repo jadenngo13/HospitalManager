@@ -9,8 +9,8 @@ import java.sql.SQLException;
 
 public class LoginModel {
 	
-	public static String docID;
-	public static String patID;
+	public static int docID;
+	public static int patID;
 	
 	private String sqlQuery = "SELECT * FROM login WHERE username=? and password=? and department=?";
 	private String sqlGetUserID = "SELECT id FROM login WHERE username=? and password=? and department=?";
@@ -61,8 +61,8 @@ public class LoginModel {
 				
 				if (res.next()) {
 					if (option.equals("Doctor"))
-							docID = res.getString("id");
-					patID = res.getString("id");
+							docID = res.getInt("id");
+					patID = res.getInt("id");
 				}
 				
 				statement.close();

@@ -28,12 +28,13 @@
                                 <columns>
                                   <TableColumn fx:id="idColumn" prefWidth="51.917938232421875" text="id" />
                                   <TableColumn fx:id="fnColumn" prefWidth="159.427490234375" text="First Name" />
-                                    <TableColumn fx:id="lnColumn" prefWidth="163.07244873046875" text="Last Name" />
-                                    <TableColumn fx:id="genderColumn" prefWidth="77.21771240234375" text="Gender" />
-                                    <TableColumn fx:id="emailColumn" prefWidth="193.47149658203125" text="Email" />
-                                    <TableColumn fx:id="birthdayColumn" prefWidth="129.2806396484375" text="Birthday" />
-                                    <TableColumn fx:id="appDateColumn" prefWidth="124.60888671875" text="App. Date" />
-                                    <TableColumn fx:id="infoColumn" prefWidth="120.5" text="Info" />
+                                    <TableColumn fx:id="lnColumn" prefWidth="150.88458251953125" text="Last Name" />
+                                    <TableColumn fx:id="genderColumn" prefWidth="75.0810546875" text="Gender" />
+                                    <TableColumn fx:id="emailColumn" prefWidth="181.4189453125" text="Email" />
+                                    <TableColumn fx:id="birthdayColumn" prefWidth="107.1624755859375" text="Birthday" />
+                                    <TableColumn fx:id="appDateColumn" prefWidth="105.0810546875" text="App. Date" />
+                                    <TableColumn fx:id="infoColumn" prefWidth="136.9189453125" text="Info" />
+                                    <TableColumn fx:id="docColumn" prefWidth="51.2777099609375" text="Doc" />
                                 </columns>
                               </TableView>
                            </children>
@@ -45,11 +46,6 @@
                                     <Insets left="50.0" />
                                  </padding>
                               </Label>
-                              <TextField fx:id="id" promptText="id">
-                                 <VBox.margin>
-                                    <Insets left="20.0" right="20.0" />
-                                 </VBox.margin>
-                              </TextField>
                               <TextField fx:id="firstName" layoutX="10.0" layoutY="53.0" promptText="First Name">
                                  <VBox.margin>
                                     <Insets left="20.0" right="20.0" />
@@ -129,7 +125,7 @@
                               </Button>
                               <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" text="Logout">
                                  <VBox.margin>
-                                    <Insets left="20.0" top="165.0" />
+                                    <Insets left="20.0" top="190.0" />
                                  </VBox.margin>
                               </Button>
                            </children>
@@ -165,11 +161,6 @@
                                     <Insets left="50.0" />
                                  </padding>
                               </Label>
-                              <TextField fx:id="id2" promptText="id">
-                                 <VBox.margin>
-                                    <Insets left="20.0" right="20.0" />
-                                 </VBox.margin>
-                              </TextField>
                               <TextField fx:id="firstName2" layoutX="10.0" layoutY="53.0" promptText="First Name">
                                  <VBox.margin>
                                     <Insets left="20.0" right="20.0" />
@@ -256,7 +247,7 @@
                               </Button>
                               <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" text="Logout">
                                  <VBox.margin>
-                                    <Insets left="20.0" top="65.0" />
+                                    <Insets left="20.0" top="95.0" />
                                  </VBox.margin>
                               </Button>
                            </children>

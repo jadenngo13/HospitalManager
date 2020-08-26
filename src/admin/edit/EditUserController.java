@@ -37,7 +37,7 @@ public class EditUserController implements Initializable {
 		this.user.setText(AdminController.selectedUser.getUser());
 		this.pass.setText(AdminController.selectedUser.getPass());
 		this.department.setText(AdminController.selectedUser.getDepartment());
-		this.id.setText(AdminController.selectedUser.getID());
+		this.id.setText(Integer.toString(AdminController.selectedUser.getID()));
 	}
 	
 	@FXML
@@ -56,7 +56,7 @@ public class EditUserController implements Initializable {
 			stmt.setString(2, this.pass.getText());
 			stmt.setString(3, this.department.getText());
 			stmt.setString(4, AdminController.selectedUser.getDepartment());
-			stmt.setString(5, this.id.getText());
+			stmt.setInt(5, Integer.valueOf(this.id.getText()));
 			stmt.execute();
 		} else {
 			System.out.println("Null values. Cannot save entry.");
@@ -66,8 +66,7 @@ public class EditUserController implements Initializable {
 	
 	// Returns whether or not all fields have been filled out
 	private boolean checkNull() {
-		return ((this.user.getText()!=null) && (this.pass.getText()!=null) && (this.department.getText()!=null)
-				&& (this.id.getText()!=null));
+		return ((this.user.getText()!=null) && (this.pass.getText()!=null) && (this.department.getText()!=null));
 	}
 }
 

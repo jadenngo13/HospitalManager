@@ -40,7 +40,7 @@ public class ViewController implements Initializable {
 			System.out.println("Error: " + e);
 		}
 		
-		this.id.setText(AdminController.selectedPatient.getID());
+		this.id.setText(Integer.toString(AdminController.selectedPatient.getID()));
 		this.name.setText(AdminController.selectedPatient.getFirstName() + AdminController.selectedPatient.getLastName());
 		this.gender.setText(AdminController.selectedPatient.getGender());
 		this.email.setText(AdminController.selectedPatient.getEmail());

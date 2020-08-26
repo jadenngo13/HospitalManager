@@ -36,7 +36,7 @@ public class ViewDoctorController implements Initializable {
 	@FXML
 	private TableView<PatientData> patientTable;
 	@FXML
-	private TableColumn<PatientData, String> idColumn;
+	private TableColumn<PatientData, Integer> idColumn;
 	@FXML
 	private TableColumn<PatientData, String> fnColumn;
 	@FXML
@@ -68,8 +68,8 @@ public class ViewDoctorController implements Initializable {
 			while (rs.next()) {
 				String[] docsPatsArr = rs.getString(9).split(",");
 				for (String patID : docsPatsArr) {
-					if (patID.equals(AdminController.selectedDoctor.getID())) {
-						this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+					if (Integer.valueOf(patID) == AdminController.selectedDoctor.getID()) {
+						this.patientData.add(new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9)));
 					}
 				}
 			}
@@ -78,14 +78,14 @@ public class ViewDoctorController implements Initializable {
 			System.err.println("Error: " + e);
 		}
 		
-		this.id.setText(AdminController.selectedDoctor.getID());
+		this.id.setText(Integer.toString(AdminController.selectedDoctor.getID()));
 		this.name.setText(AdminController.selectedDoctor.getFirstName() + AdminController.selectedDoctor.getLastName());
 		this.gender.setText(AdminController.selectedDoctor.getGender());
 		this.email.setText(AdminController.selectedDoctor.getEmail());
 		this.birthday.setValue(AdminController.LOCAL_DATE(AdminController.selectedDoctor.getBirthday()));
 		this.department.setText(AdminController.selectedDoctor.getDepartment());
 		
-		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
+		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("ID"));
 		this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 		this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
 		this.genderColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));

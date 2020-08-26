@@ -2,11 +2,13 @@ package data;
 
 import javafx.scene.control.CheckBox;
 import javafx.beans.property.StringProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class PatientData {
 	
-	private StringProperty ID;
+	private IntegerProperty ID;
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private StringProperty gender;
@@ -14,11 +16,11 @@ public class PatientData {
 	private StringProperty birthday;
 	private StringProperty appDate;
 	private StringProperty info;
-	private StringProperty doctor;
+	private IntegerProperty doctor;
 	private CheckBox select;
 	
-	public PatientData(String id, String firstName, String lastName, String gender, String email, String bday, String appDate, String info, String doctor) {
-		this.ID = new SimpleStringProperty(id);
+	public PatientData(int id, String firstName, String lastName, String gender, String email, String bday, String appDate, String info, int doctor) {
+		this.ID = new SimpleIntegerProperty(id);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
 		this.gender = new SimpleStringProperty(gender);
@@ -26,11 +28,11 @@ public class PatientData {
 		this.birthday = new SimpleStringProperty(bday);
 		this.appDate = new SimpleStringProperty(appDate);
 		this.info = new SimpleStringProperty(info);
-		this.doctor = new SimpleStringProperty(doctor);
+		this.doctor = new SimpleIntegerProperty(doctor);
 		this.select = new CheckBox();
 	}
 	
-	public String getID() {
+	public int getID() {
 		return ID.get();
 	}
 
@@ -62,7 +64,7 @@ public class PatientData {
 		return info.get();
 	}
 	
-	public String getDoctor() {
+	public int getDoctor() {
 		return doctor.get();
 	}
 	
@@ -70,7 +72,7 @@ public class PatientData {
 		return this.select;
 	}
 
-	public void setID(String id) {
+	public void setID(int id) {
 		this.ID.set(id);
 	}
 
@@ -102,7 +104,7 @@ public class PatientData {
 		this.info.set(info);
 	}
 	
-	public void setDoctor(String doctor) {
+	public void setDoctor(int doctor) {
 		this.doctor.set(doctor);
 	}
 	
@@ -110,7 +112,7 @@ public class PatientData {
 		this.select = select;
 	}
 	
-	public StringProperty idProperty() {
+	public IntegerProperty idProperty() {
 		return this.ID;
 	}
 	
@@ -142,7 +144,7 @@ public class PatientData {
 		return this.info;
 	}
 	
-	public StringProperty doctorProperty() {
+	public IntegerProperty doctorProperty() {
 		return this.doctor;
 	}
 }

@@ -21,7 +21,7 @@ import loginapp.LoginModel;
 import admin.AdminController;
 
 public class EditController implements Initializable {
-	
+
 	@FXML
 	private TextField id;
 	@FXML
@@ -48,7 +48,7 @@ public class EditController implements Initializable {
 	
 	private Connection conn;
 
-	private String sqlSave = "UPDATE patients SET id = ?, first_name = ?, last_name = ?, gender = ?, email = ?, birthday = ?, appointment_date = ?, info = ? WHERE id = ?";
+	private String sqlSave = "UPDATE patients SET first_name = ?, last_name = ?, gender = ?, email = ?, birthday = ?, appointment_date = ?, info = ? WHERE id = ?";
 	
 	public void initialize(URL url, ResourceBundle rb) {
 		conn = LoginModel.conn;
@@ -57,7 +57,7 @@ public class EditController implements Initializable {
 		this.appDate.setPromptText("App. Date");
 		
 		
-		this.id.setText(AdminController.selectedPatient.getID());
+		this.id.setText(Integer.toString(AdminController.selectedPatient.getID()));
 		this.firstName.setText(AdminController.selectedPatient.getFirstName());
 		this.lastName.setText(AdminController.selectedPatient.getLastName());
 		this.gender.setText(AdminController.selectedPatient.getGender());
@@ -86,21 +86,20 @@ public class EditController implements Initializable {
 			stmt = conn.prepareStatement(sqlSave);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
-			stmt.setString(1, this.id.getText());
-			stmt.setString(2, this.firstName.getText());
-			stmt.setString(3, this.lastName.getText());
-			stmt.setString(4, this.gender.getText());
-			stmt.setString(5, this.email.getText());
+			stmt.setString(1, this.firstName.getText());
+			stmt.setString(2, this.lastName.getText());
+			stmt.setString(3, this.gender.getText());
+			stmt.setString(4, this.email.getText());
 			LocalDate bday = this.birthday.getValue();
 			if (bday != null) {
-			    stmt.setString(6, formatter.format(bday));
+			    stmt.setString(5, formatter.format(bday));
 			}
 			LocalDate aday = this.appDate.getValue(); 
 			if (aday != null) {
-				stmt.setString(7, formatter.format(aday));
+				stmt.setString(6, formatter.format(aday));
 			}
-			stmt.setString(8, this.info.getText());
-			stmt.setString(9, AdminController.selectedPatient.getID());
+			stmt.setString(7, this.info.getText());
+			stmt.setInt(8, AdminController.selectedPatient.getID());
 			stmt.execute();
 		} else {
 			System.out.println("Entry is missing values");
@@ -109,7 +108,7 @@ public class EditController implements Initializable {
 	
 	// Returns whether or not all fields have been filled out
 	private boolean checkNull() {
-		return ((this.id.getText()!=null) && (this.firstName.getText()!=null) && (this.lastName.getText()!=null)
+		return ((this.firstName.getText()!=null) && (this.lastName.getText()!=null)
 				&& (this.gender.getText()!=null) && (this.email.getText()!=null) && (this.birthday.getValue()!=null)
 				&& (this.appDate.getValue()!=null) && (this.info.getText()!=null));
 	}

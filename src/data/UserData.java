@@ -1,5 +1,7 @@
 package data;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -8,13 +10,13 @@ public class UserData {
 	private StringProperty user;
 	private StringProperty pass;
 	private StringProperty department;
-	private StringProperty ID;
+	private IntegerProperty ID;
 	
-	public UserData(String user, String pass, String department, String id) {
+	public UserData(String user, String pass, String department, int id) {
 		this.user = new SimpleStringProperty(user);
 		this.pass = new SimpleStringProperty(pass);
 		this.department = new SimpleStringProperty(department);
-		this.ID = new SimpleStringProperty(id);
+		this.ID = new SimpleIntegerProperty(id);
 	}
 
 	public String getUser() {
@@ -29,7 +31,7 @@ public class UserData {
 		return department.get();
 	}
 	
-	public String getID() {
+	public int getID() {
 		return ID.get();
 	}
 
@@ -57,7 +59,7 @@ public class UserData {
 		return this.department;
 	}
 	
-	public StringProperty idProperty() {
+	public IntegerProperty idProperty() {
 		return this.ID;
 	}
 }

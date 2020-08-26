@@ -34,7 +34,7 @@ public class DoctorController implements Initializable {
 	@FXML
 	private TableView<PatientData> doctorTable;
 	@FXML
-	private TableColumn<PatientData, String> idColumn;
+	private TableColumn<PatientData, Integer> idColumn;
 	@FXML
 	private TableColumn<PatientData, String> fnColumn;
 	@FXML
@@ -67,17 +67,16 @@ public class DoctorController implements Initializable {
 		stmt = null;
 		try {
 			if (LoginModel.conn != null) {
-				System.out.println("doc");
 				conn = LoginModel.conn;
 			}
 			
 			
 			stmt = conn.prepareStatement(AdminController.sqlGetDoctorFromID);
-			stmt.setString(1, LoginModel.docID);
+			stmt.setInt(1, LoginModel.docID);
 			
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				this.user = new DoctorData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8));
+				this.user = new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -144,15 +143,15 @@ public class DoctorController implements Initializable {
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
-				if (rs.getString(9).equals(LoginModel.docID)) {
-					this.patientData.add(new PatientData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9)));
+				if (rs.getInt(9) == LoginModel.docID) {
+					this.patientData.add(new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9)));
 				}
 			}
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
 		
-		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("ID"));
+		this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("ID"));
 		this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
 		this.lnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("lastName"));
 		this.genderColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("gender"));
@@ -173,19 +172,19 @@ public class DoctorController implements Initializable {
 				StringBuilder newPats = new StringBuilder();
 				String[] docsPats = user.getPatients().split(",");
 				for (String patID : docsPats) {
-					if (!patID.equals(patient.getID())) {
+					if (Integer.valueOf(patID) != patient.getID()) {
 						newPats.append(patID + ",");
 					}
 				}
 				stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
 				stmt.setString(1, newPats.toString());
-				stmt.setString(2, LoginModel.docID);
+				stmt.setInt(2, LoginModel.docID);
 				stmt.execute();
 				
 				// Update the patient
 				stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient1);
-				stmt.setString(1, "-1");
-				stmt.setString(2, patient.getID());
+				stmt.setInt(1, -1);
+				stmt.setInt(2, patient.getID());
 				stmt.execute();
 			}
 		} catch (SQLException e) {
