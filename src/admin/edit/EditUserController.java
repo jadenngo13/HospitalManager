@@ -52,7 +52,7 @@ public class EditUserController implements Initializable {
 	private void saveEntry(ActionEvent event) throws SQLException {
 		if (checkNull()) {
 			stmt = conn.prepareStatement(AdminController.sqlUpdateUsers);
-			stmt.setString(1, this.user.getText());
+			stmt.setString(1, this.user.getText().toLowerCase());
 			stmt.setString(2, this.pass.getText());
 			stmt.setString(3, this.department.getText());
 			stmt.setString(4, AdminController.selectedUser.getDepartment());

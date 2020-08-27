@@ -596,14 +596,14 @@ public class AdminController implements Initializable {
 		try {
 			if (adminTab.equals("Patients")) {
 				stmt = conn.prepareStatement(sqlCreateLogin);
-				stmt.setString(1, name);
+				stmt.setString(1, name.toLowerCase());
 				stmt.setString(2, generateRandomString(7));
 				stmt.setString(3, "Patient");
 				stmt.setInt(4, id);
 				stmt.execute();
 			} else if (adminTab.equals("Doctors")) {
 				stmt = conn.prepareStatement(sqlCreateLogin);
-				stmt.setString(1, name);
+				stmt.setString(1, name.toLowerCase());
 				stmt.setString(2, generateRandomString(7));
 				stmt.setString(3, "Doctor");
 				stmt.setInt(4, id);
