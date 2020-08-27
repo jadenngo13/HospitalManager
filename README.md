@@ -30,7 +30,7 @@
   
   - Logins can be edited by 'Admin' user
   
-  - Different user interface and functionality for 'Admin', 'Doctor', and 'Patient users
+  - Different user interface and functionality for 'Admin'/'Doctor'/'Patient' users
   
   - IDs auto generate whenever new 'Patient'/'Doctor' created 
  
