@@ -5,7 +5,6 @@ import java.net.URL;
 import java.sql.Connection;
 import java.util.ResourceBundle;
 
-import dbUtil.dbConnection;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +18,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import patient.PatientController;
 
 public class LoginController implements Initializable {
 	

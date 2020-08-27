@@ -23,8 +23,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import loginapp.LoginController;
-import loginapp.LoginModel;
 
 public class EditDoctorController implements Initializable {
 

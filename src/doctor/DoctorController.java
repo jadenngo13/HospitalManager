@@ -25,8 +25,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import dbUtil.dbConnection;
-import loginapp.LoginController;
 import loginapp.LoginModel;
 
 public class DoctorController implements Initializable {

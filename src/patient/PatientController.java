@@ -28,7 +28,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import loginapp.LoginController;
 import loginapp.LoginModel;
 
 public class PatientController implements Initializable {

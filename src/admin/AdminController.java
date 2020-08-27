@@ -28,8 +28,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import loginapp.LoginController;
-import loginapp.LoginModel;
 import javafx.scene.control.TableColumn;
 
 import java.util.ArrayList;
