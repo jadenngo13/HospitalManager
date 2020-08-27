@@ -78,7 +78,7 @@ public class PatientController implements Initializable {
 		try {
 			conn = dbConnection.conn;
 			
-			
+			// Load user
 			stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
 			stmt.setInt(1, LoginModel.patID);
 			
@@ -90,6 +90,7 @@ public class PatientController implements Initializable {
 			stmt = conn.prepareStatement(AdminController.sqlGetPatientsDoctor);
 			stmt.setInt(1, user.getDoctor());
 			
+			// Load patient's doctor
 			this.doctorData = FXCollections.observableArrayList();
 			rs = stmt.executeQuery();
 			if (rs.next()) {

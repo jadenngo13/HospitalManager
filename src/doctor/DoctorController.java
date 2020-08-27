@@ -69,6 +69,7 @@ public class DoctorController implements Initializable {
 			}
 			
 			
+			// Load user
 			stmt = conn.prepareStatement(AdminController.sqlGetDoctorFromID);
 			stmt.setInt(1, LoginModel.docID);
 			
@@ -108,7 +109,7 @@ public class DoctorController implements Initializable {
 			try {
 				Stage editStage = new Stage();
 				FXMLLoader editLoader = new FXMLLoader();
-				Pane editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editFXML.fxml").openStream());
+				Pane editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editPatientFXML.fxml").openStream());
 				
 				if (editRoot != null) {
 					Scene editScene = new Scene(editRoot);
@@ -134,7 +135,6 @@ public class DoctorController implements Initializable {
 	@FXML
 	private void refreshPatientData(ActionEvent event) throws SQLException {
 		try {
-			// Clear patients to be deleted array
 			patientsToDel.clear();
 			
 			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
@@ -179,7 +179,7 @@ public class DoctorController implements Initializable {
 				stmt.setInt(2, LoginModel.docID);
 				stmt.execute();
 				
-				// Update the patient
+				// Update patient
 				stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient1);
 				stmt.setInt(1, -1);
 				stmt.setInt(2, patient.getID());

@@ -68,7 +68,9 @@ public class EditDoctorController implements Initializable {
 			conn = dbConnection.conn;
 			rs = null;
 			
-
+			this.selectedPatients = FXCollections.observableArrayList();
+			
+			// Load doctor's patients
 			this.patientData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
 			
@@ -81,14 +83,6 @@ public class EditDoctorController implements Initializable {
 					}
 				}
 			}
-			
-			this.doctorData = FXCollections.observableArrayList();
-			rs = conn.createStatement().executeQuery(AdminController.sqlLoadDoctors);
-			while (rs.next()) {
-				this.doctorData.add(new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
-			}
-			
-			this.selectedPatients = FXCollections.observableArrayList();
 		} catch (SQLException e) {
 			System.err.println("Error: " + e);
 		}
@@ -134,6 +128,8 @@ public class EditDoctorController implements Initializable {
 		
 		boolean entryNotNull = checkNull();
 		if (entryNotNull) {
+			
+			// Update doctor
 			stmt = conn.prepareStatement(AdminController.sqlSave);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
@@ -150,7 +146,6 @@ public class EditDoctorController implements Initializable {
 			for (PatientData selPatient : selectedPatients) {
 				selectedPats.append(selPatient.getID() + ",");
 			}
-			System.out.println("selectedPats: " + selectedPats.toString());
 			stmt.setString(7, selectedPats.toString());
 			stmt.setInt(8, AdminController.selectedDoctor.getID());
 			stmt.execute();
@@ -162,25 +157,6 @@ public class EditDoctorController implements Initializable {
 				stmt.setInt(2, selPatient.getID());
 				stmt.execute();
 			}
-			
-			/* Update other doctor who had newly assigned patient
-			stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
-			for (PatientData selPatient : selectedPatients) {
-				for (DoctorData doctor : doctorData) {
-					if (doctor.getID() == AdminController.selectedDoctor.getID()) {
-						String[] patsArr = doctor.getPatients().split(",");
-						StringBuilder newPats = new StringBuilder();
-						for (String patID : patsArr) {
-							if (Integer.valueOf(patID) == selPatient.getID()) {
-								newPats.append(patID + ",");
-							}
-						}
-						stmt.setString(1, newPats.toString()); //newPats
-						stmt.setInt(2, doctor.getID());
-						stmt.execute();
-					}
-				}
-			} */
 			
 			// Update patients to be removed
 			stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);

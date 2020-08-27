@@ -195,6 +195,7 @@ public class AdminController implements Initializable {
 				this.doctorData.add(new DoctorData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8)));
 			}
 			
+			// Load users
 			this.userData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(sqlLoadUsers);
 			while (rs.next()) {
@@ -248,7 +249,7 @@ public class AdminController implements Initializable {
 				while (rs.next()) {
 					this.userData.add(new UserData(rs.getString(1),rs.getString(2),rs.getString(3),rs.getInt(4)));
 				}
-			} else {
+			} else { 
 				System.out.println("No tab is selected for refresh data.");
 				return;
 			}
@@ -259,6 +260,7 @@ public class AdminController implements Initializable {
 			System.err.println("Error: " + e);
 		}
 		
+		// Populate fields in respective tab
 		if (adminTab.equals("Patients")) {
 			this.idColumn.setCellValueFactory(new PropertyValueFactory<PatientData, Integer>("ID"));
 			this.fnColumn.setCellValueFactory(new PropertyValueFactory<PatientData, String>("firstName"));
@@ -321,10 +323,12 @@ public class AdminController implements Initializable {
 						stmt.execute();
 					}
 				    
+				    // Delete patient
 					stmt = conn.prepareStatement(sqlDelPatients);
 				    stmt.setInt(1, patient.getID());
 				    stmt.execute();
-				    
+				     
+				    // Delete patient's login
 				    stmt = conn.prepareStatement(sqlDelUsers);
 				    stmt.setString(1, "Patient");
 				    stmt.setInt(2, patient.getID());
@@ -338,6 +342,7 @@ public class AdminController implements Initializable {
 			for (DoctorData doctor : doctorsToDel) {
 				try {
 					
+					// Delete doctor
 					stmt = conn.prepareStatement(sqlDelDoctors);
 				    stmt.setInt(1, doctor.getID());
 				    stmt.execute();
@@ -348,6 +353,7 @@ public class AdminController implements Initializable {
 				    stmt.setInt(2, doctor.getID());
 				    stmt.execute();
 				    
+				    // Delete doctor's login
 				    stmt = conn.prepareStatement(sqlDelUsers);
 				    stmt.setString(1, "Doctor");
 				    stmt.setInt(2, doctor.getID());
@@ -367,7 +373,9 @@ public class AdminController implements Initializable {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
-			if (adminTab.equals("Patients")) { //SQL query inserts that differ for patients
+			if (adminTab.equals("Patients")) {
+				
+				// Insert new patient
 				stmt = conn.prepareStatement(sqlInsertPatient);	
 				stmt.setString(1, this.firstName.getText());
 				stmt.setString(2, this.lastName.getText());
@@ -385,13 +393,16 @@ public class AdminController implements Initializable {
 				stmt.setInt(8, -1);
 				stmt.execute();
 				
+				// Create new login for patient
 				rs = conn.createStatement().executeQuery(sqlGetRecentPatient);
 				int newUserId = -1;
 				if (rs.next()) {
 					newUserId = rs.getInt(1);
 				}
 				createUser(newUserId, this.firstName.getText());
-			} else if (adminTab.equals("Doctors")) { // SQL query inserts that differ for doctors
+			} else if (adminTab.equals("Doctors")) { 
+				
+				// Insert new doctor
 				stmt = conn.prepareStatement(sqlInsertDoctor);
 				stmt.setString(1, this.firstName2.getText());
 				stmt.setString(2, this.lastName2.getText());
@@ -411,7 +422,8 @@ public class AdminController implements Initializable {
 				}
 				stmt.setString(7, pats.toString());
 				stmt.execute();
-				
+			
+				// Get id from newly inserted doctor
 				rs = conn.createStatement().executeQuery(sqlGetRecentDoctor);
 				int newDocID = -1;
 				if (rs.next()) {
@@ -509,7 +521,7 @@ public class AdminController implements Initializable {
 			if (adminTab.equals("Patients")) {
 				selectedPatient = patientTable.getSelectionModel().getSelectedItem();
 				if (selectedPatient != null)
-					editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editFXML.fxml").openStream());
+					editRoot = (Pane)editLoader.load(getClass().getResource("/admin/edit/editPatientFXML.fxml").openStream());
 			} else if (adminTab.equals("Doctors")){
 				selectedDoctor = doctorTable.getSelectionModel().getSelectedItem();
 				if (selectedDoctor != null)

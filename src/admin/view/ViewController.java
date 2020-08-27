@@ -34,11 +34,7 @@ public class ViewController implements Initializable {
 	private Connection conn;
 	
 	public void initialize(URL url, ResourceBundle rb) {
-		try {
-			conn = dbConnection.getConnection();
-		} catch (SQLException e) {
-			System.out.println("Error: " + e);
-		}
+		conn = dbConnection.conn;
 		
 		this.id.setText(Integer.toString(AdminController.selectedPatient.getID()));
 		this.name.setText(AdminController.selectedPatient.getFirstName() + AdminController.selectedPatient.getLastName());

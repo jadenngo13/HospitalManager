@@ -60,7 +60,7 @@ public class ViewDoctorController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		rs = null;
 		try {
-			conn = dbConnection.getConnection();
+			conn = dbConnection.conn;
 			
 			this.patientData = FXCollections.observableArrayList();
 			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);

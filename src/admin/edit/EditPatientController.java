@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
-import dbUtil.dbConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,11 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import loginapp.LoginController;
 import loginapp.LoginModel;
 import admin.AdminController;
 
-public class EditController implements Initializable {
+public class EditPatientController implements Initializable {
 
 	@FXML
 	private TextField id;
@@ -83,6 +81,8 @@ public class EditController implements Initializable {
 	private void submitEntry(ActionEvent event) throws SQLException {
 		boolean entryNotNull = checkNull();
 		if (entryNotNull) {
+			
+			// Update Patient
 			stmt = conn.prepareStatement(sqlSave);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
