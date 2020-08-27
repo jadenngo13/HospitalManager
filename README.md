@@ -5,7 +5,7 @@
     
   - Uses SQLite to store database
     
-  - Implements javafx to provide a GUI to the user
+  - Implements JavFX to provide a GUI to the user
   
   - Uses FXML files to write user interface
   
