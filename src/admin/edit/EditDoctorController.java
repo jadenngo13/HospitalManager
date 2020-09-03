@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sql.SqlQueries;
 
 public class EditDoctorController implements Initializable {
 
@@ -72,7 +73,7 @@ public class EditDoctorController implements Initializable {
 			
 			// Load doctor's patients
 			this.patientData = FXCollections.observableArrayList();
-			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
+			rs = conn.createStatement().executeQuery(SqlQueries.sqlLoadPatients);
 			
 			while (rs.next()) {
 				this.patientData.add(new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9)));
@@ -130,7 +131,7 @@ public class EditDoctorController implements Initializable {
 		if (entryNotNull) {
 			
 			// Update doctor
-			stmt = conn.prepareStatement(AdminController.sqlSave);
+			stmt = conn.prepareStatement(SqlQueries.sqlSave);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			
 			stmt.setString(1, this.firstName.getText());
@@ -151,7 +152,7 @@ public class EditDoctorController implements Initializable {
 			stmt.execute();
 			
 			// Update patients to be added
-			stmt = conn.prepareStatement(AdminController.sqlUpdatePatients);
+			stmt = conn.prepareStatement(SqlQueries.sqlUpdatePatients);
 			for (PatientData selPatient : selectedPatients) {
 				stmt.setInt(1, AdminController.selectedDoctor.getID());
 				stmt.setInt(2, selPatient.getID());
@@ -159,7 +160,7 @@ public class EditDoctorController implements Initializable {
 			}
 			
 			// Update patients to be removed
-			stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient);
+			stmt = conn.prepareStatement(SqlQueries.sqlUpdateDoctorsPatient);
 			for (PatientData patient : patientData) {
 				if ((!patient.getSelect().isSelected()) && (patient.getDoctor() == AdminController.selectedDoctor.getID())) {
 					stmt.setInt(1, -1);

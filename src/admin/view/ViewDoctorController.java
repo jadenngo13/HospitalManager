@@ -18,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import sql.SqlQueries;
 
 public class ViewDoctorController implements Initializable {
 	
@@ -63,7 +64,7 @@ public class ViewDoctorController implements Initializable {
 			conn = dbConnection.conn;
 			
 			this.patientData = FXCollections.observableArrayList();
-			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
+			rs = conn.createStatement().executeQuery(SqlQueries.sqlLoadPatients);
 			
 			while (rs.next()) {
 				String[] docsPatsArr = rs.getString(9).split(",");

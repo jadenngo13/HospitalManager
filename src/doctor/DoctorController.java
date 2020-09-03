@@ -26,6 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import loginapp.LoginModel;
+import sql.SqlQueries;
 
 public class DoctorController implements Initializable {
  
@@ -70,7 +71,7 @@ public class DoctorController implements Initializable {
 			
 			
 			// Load user
-			stmt = conn.prepareStatement(AdminController.sqlGetDoctorFromID);
+			stmt = conn.prepareStatement(SqlQueries.sqlGetDoctorFromID);
 			stmt.setInt(1, LoginModel.docID);
 			
 			rs = stmt.executeQuery();
@@ -137,7 +138,7 @@ public class DoctorController implements Initializable {
 		try {
 			patientsToDel.clear();
 			
-			rs = conn.createStatement().executeQuery(AdminController.sqlLoadPatients);
+			rs = conn.createStatement().executeQuery(SqlQueries.sqlLoadPatients);
 			
 			this.patientData = FXCollections.observableArrayList();
 			while (rs.next()) {
@@ -174,13 +175,13 @@ public class DoctorController implements Initializable {
 						newPats.append(patID + ",");
 					}
 				}
-				stmt = conn.prepareStatement(AdminController.sqlUpdatePatientsDoctor);
+				stmt = conn.prepareStatement(SqlQueries.sqlUpdatePatientsDoctor);
 				stmt.setString(1, newPats.toString());
 				stmt.setInt(2, LoginModel.docID);
 				stmt.execute();
 				
 				// Update patient
-				stmt = conn.prepareStatement(AdminController.sqlUpdateDoctorsPatient1);
+				stmt = conn.prepareStatement(SqlQueries.sqlUpdateDoctorsPatient1);
 				stmt.setInt(1, -1);
 				stmt.setInt(2, patient.getID());
 				stmt.execute();

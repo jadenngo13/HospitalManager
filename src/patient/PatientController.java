@@ -29,6 +29,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import loginapp.LoginModel;
+import sql.SqlQueries;
 
 public class PatientController implements Initializable {
 
@@ -79,7 +80,7 @@ public class PatientController implements Initializable {
 			conn = dbConnection.conn;
 			
 			// Load user
-			stmt = conn.prepareStatement(AdminController.sqlGetPatientFromID);
+			stmt = conn.prepareStatement(SqlQueries.sqlGetPatientFromID);
 			stmt.setInt(1, LoginModel.patID);
 			
 			rs = stmt.executeQuery();
@@ -87,7 +88,7 @@ public class PatientController implements Initializable {
 				this.user = new PatientData(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(8),rs.getInt(9));
 			}
 			
-			stmt = conn.prepareStatement(AdminController.sqlGetPatientsDoctor);
+			stmt = conn.prepareStatement(SqlQueries.sqlGetPatientsDoctor);
 			stmt.setInt(1, user.getDoctor());
 			
 			// Load patient's doctor

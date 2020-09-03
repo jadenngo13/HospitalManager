@@ -7,14 +7,12 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import admin.AdminController;
-import dbUtil.dbConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import loginapp.LoginController;
 import loginapp.LoginModel;
+import sql.SqlQueries;
 
 public class EditUserController implements Initializable {
 
@@ -51,7 +49,7 @@ public class EditUserController implements Initializable {
 	@FXML
 	private void saveEntry(ActionEvent event) throws SQLException {
 		if (checkNull()) {
-			stmt = conn.prepareStatement(AdminController.sqlUpdateUsers);
+			stmt = conn.prepareStatement(SqlQueries.sqlUpdateUsers);
 			stmt.setString(1, this.user.getText().toLowerCase());
 			stmt.setString(2, this.pass.getText());
 			stmt.setString(3, this.department.getText());
