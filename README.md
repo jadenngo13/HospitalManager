@@ -1,7 +1,6 @@
 ## Overview
 
-  - A database management project that implements a dynamically 
-    connected database
+  - A database management project that implements a fully connected database
     
   - Uses SQLite to store database
     
